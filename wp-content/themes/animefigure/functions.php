@@ -91,6 +91,7 @@ add_action( 'wp_enqueue_scripts', 'animefigure_enqueue_assets' );
 function animefigure_widgets_init() {
     $sidebars = [
         [ 'name' => __( 'Sidebar chính', 'animefigure' ), 'id' => 'sidebar-main' ],
+        [ 'name' => __( 'Sidebar Cửa Hàng', 'animefigure' ), 'id' => 'sidebar-shop' ],
         [ 'name' => __( 'Footer Cột 1', 'animefigure' ), 'id' => 'footer-1' ],
         [ 'name' => __( 'Footer Cột 2', 'animefigure' ), 'id' => 'footer-2' ],
         [ 'name' => __( 'Footer Cột 3', 'animefigure' ), 'id' => 'footer-3' ],
@@ -109,6 +110,37 @@ function animefigure_widgets_init() {
     }
 }
 add_action( 'widgets_init', 'animefigure_widgets_init' );
+
+/* =========================================================
+   WOOCOMMERCE LAYOUT
+   ========================================================= */
+// Remove default WooCommerce wrappers
+remove_action( 'woocommerce_before_main_content', 'woocommerce_output_content_wrapper', 10 );
+remove_action( 'woocommerce_after_main_content', 'woocommerce_output_content_wrapper_end', 10 );
+// Remove default WooCommerce sidebar
+remove_action( 'woocommerce_sidebar', 'woocommerce_get_sidebar', 10 );
+
+// Add custom wrappers
+add_action( 'woocommerce_before_main_content', 'animefigure_wrapper_start', 10 );
+function animefigure_wrapper_start() {
+    echo '<div class="container shop-container" style="padding-top: 40px; padding-bottom: 60px; display: flex; gap: 40px; align-items: flex-start;">';
+    
+    // Print sidebar on the left
+    if ( is_active_sidebar( 'sidebar-shop' ) ) {
+        echo '<aside class="shop-sidebar" style="flex: 0 0 280px; position: sticky; top: 100px;">';
+        dynamic_sidebar( 'sidebar-shop' );
+        echo '</aside>';
+    }
+
+    echo '<div class="shop-main-content" style="flex: 1; min-width: 0;">';
+}
+
+add_action( 'woocommerce_after_main_content', 'animefigure_wrapper_end', 10 );
+function animefigure_wrapper_end() {
+    echo '</div>'; // End shop-main-content
+    echo '</div>'; // End container
+}
+
 
 /* =========================================================
    HELPER FUNCTIONS
@@ -249,3 +281,21 @@ add_filter( 'loop_shop_columns', function() { return 4; } );
 
 // Change products per page
 add_filter( 'loop_shop_per_page', function() { return 20; } );
+
+/* =========================================================
+   ADD "BUY NOW" BUTTON TO SINGLE PRODUCT
+   ========================================================= */
+add_action( 'woocommerce_after_add_to_cart_button', 'animefigure_add_buy_now_button' );
+function animefigure_add_buy_now_button() {
+    global $product;
+    if ( ! $product || ! $product->is_in_stock() ) return;
+    echo '<button type="submit" name="buy_now" value="true" class="button buy-now-btn">Mua ngay</button>';
+}
+
+add_filter( 'woocommerce_add_to_cart_redirect', 'animefigure_buy_now_redirect' );
+function animefigure_buy_now_redirect( $url ) {
+    if ( isset( $_REQUEST['buy_now'] ) && $_REQUEST['buy_now'] ) {
+        return wc_get_checkout_url();
+    }
+    return $url;
+}

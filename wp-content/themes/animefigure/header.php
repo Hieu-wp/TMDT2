@@ -169,3 +169,58 @@
     </form>
   </div>
 </div>
+
+<!-- =========================================================
+     COMPACT TRUST STRIP
+     ========================================================= -->
+<div class="compact-trust-strip" style="background:#f8f9fa; border-bottom:1px solid #ececec; padding:12px 0;">
+  <div class="container">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+      
+      <!-- Item 1 -->
+      <div style="display:flex; align-items:center; gap:12px;">
+        <div style="background:#ffcccb; color:#f28c8c; width:36px; height:36px; border-radius:8px; display:flex; align-items:center; justify-content:center;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div>
+          <div style="font-size:13px; font-weight:700; color:#333;">Hàng Chính Hãng 100%</div>
+          <div style="font-size:11px; color:#777;">Cam kết nguồn gốc rõ ràng</div>
+        </div>
+      </div>
+
+      <!-- Item 2 -->
+      <div style="display:flex; align-items:center; gap:12px;">
+        <div style="background:#ffcccb; color:#f28c8c; width:36px; height:36px; border-radius:8px; display:flex; align-items:center; justify-content:center;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+        <div>
+          <div style="font-size:13px; font-weight:700; color:#333;">Giao Hàng Toàn Quốc</div>
+          <div style="font-size:11px; color:#777;">Đóng gói cẩn thận, nhanh chóng</div>
+        </div>
+      </div>
+
+      <!-- Item 3 -->
+      <div style="display:flex; align-items:center; gap:12px;">
+        <div style="background:#ffcccb; color:#f28c8c; width:36px; height:36px; border-radius:8px; display:flex; align-items:center; justify-content:center;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        </div>
+        <div>
+          <div style="font-size:13px; font-weight:700; color:#333;">Đổi Trả 30 Ngày</div>
+          <div style="font-size:11px; color:#777;">Không hài lòng, hoàn tiền ngay</div>
+        </div>
+      </div>
+
+      <!-- Item 4 -->
+      <div style="display:flex; align-items:center; gap:12px;">
+        <div style="background:#ffcccb; color:#f28c8c; width:36px; height:36px; border-radius:8px; display:flex; align-items:center; justify-content:center;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013 13.81a19.79 19.79 0 01-3.07-8.68A2 2 0 011.91 3h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 10.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 17.92z"/></svg>
+        </div>
+        <div>
+          <div style="font-size:13px; font-weight:700; color:#333;">Hỗ Trợ 7/7</div>
+          <div style="font-size:11px; color:#777;">Hotline: 1800-9999 miễn phí</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -36,8 +36,8 @@ define( 'DB_CHARSET', 'utf8mb4' );
 
 /** The database collate type. Don't change this if in doubt. */
 define( 'DB_COLLATE', '' );
-define('WP_HOME','https://hyphen-spleen-oval.ngrok-free.dev/TMDT-main');
-define('WP_SITEURL','https://hyphen-spleen-oval.ngrok-free.dev/TMDT-main');
+define('WP_HOME', 'http://localhost/TMDT-main');
+define('WP_SITEURL', 'http://localhost/TMDT-main');
 
 
 /**#@+
@@ -59,9 +59,6 @@ define( 'AUTH_SALT',        '-Jq>ndz;.ll&LU3!De{07xN#kCK>9>=6@7u9E Mg~QN[09}<U!F
 define( 'SECURE_AUTH_SALT', 'O}M0u6(|3Y]X80! ll}%EFr?Yu)bd5.6VG&yS2M9v*|Y@a^S<E}ztzJEIRYr5&<r' );
 define( 'LOGGED_IN_SALT',   '&SOqH%Q!4f%7dm>;H&IPN,0dHRe6v!)Gh,om8Ww|Id9aH<x-t8UNlfQ>=K` #Bc_' );
 define( 'NONCE_SALT',       'RDyEJR=hN/Q9r;z*eKGx+V];XEB_aTp|A=y<55au]j[| M*w-m7]:d.OczKhM?$X' );
-define('FORCE_SSL_ADMIN', true);
-$_SERVER['HTTPS'] = 'on';
-
 /**#@-*/
 
 /**

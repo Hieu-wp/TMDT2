@@ -177,51 +177,7 @@ function render_product_card($product, $idx = 0) {
   </div>
 </section>
 
-<!-- =========================================================
-     TRUST STRIP
-     ========================================================= -->
-<div class="trust-strip">
-  <div class="container">
-    <div class="trust-grid">
-      <div class="trust-item">
-        <div class="trust-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        </div>
-        <div class="trust-text">
-          <h4>Hàng Chính Hãng 100%</h4>
-          <p>Cam kết nguồn gốc rõ ràng</p>
-        </div>
-      </div>
-      <div class="trust-item">
-        <div class="trust-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </div>
-        <div class="trust-text">
-          <h4>Giao Hàng Toàn Quốc</h4>
-          <p>Đóng gói cẩn thận, nhanh chóng</p>
-        </div>
-      </div>
-      <div class="trust-item">
-        <div class="trust-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-        </div>
-        <div class="trust-text">
-          <h4>Đổi Trả 30 Ngày</h4>
-          <p>Không hài lòng, hoàn tiền ngay</p>
-        </div>
-      </div>
-      <div class="trust-item">
-        <div class="trust-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013 13.81a19.79 19.79 0 01-3.07-8.68A2 2 0 011.91 3h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 10.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 17.92z"/></svg>
-        </div>
-        <div class="trust-text">
-          <h4>Hỗ Trợ 7/7</h4>
-          <p>Hotline: 1800-9999 miễn phí</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+
 
 <!-- =========================================================
      DANH MỤC NỔI BẬT
@@ -242,25 +198,34 @@ function render_product_card($product, $idx = 0) {
 
     <div class="categories-grid">
       <?php
-      $categories = [
-        ['name' => 'Nendoroid',    'emoji' => '🎭', 'count' => '240+', 'bg' => '#EBF3FD', 'slug' => 'nendoroid'],
-        ['name' => 'Scale Figure', 'emoji' => '⚔️', 'count' => '180+', 'bg' => '#FEF6EE', 'slug' => 'scale-figure'],
-        ['name' => 'Figma',        'emoji' => '🤸', 'count' => '120+', 'bg' => '#F0FFF4', 'slug' => 'figma'],
-        ['name' => 'Pop Up Parade','emoji' => '🌟', 'count' => '95+',  'bg' => '#FDF4FF', 'slug' => 'pop-up-parade'],
-        ['name' => 'Plushie',      'emoji' => '🧸', 'count' => '60+',  'bg' => '#FFFBEB', 'slug' => 'plushie'],
-      ];
-      foreach ($categories as $cat):
-        $term = function_exists('get_term_by') ? get_term_by('slug', $cat['slug'], 'product_cat') : null;
-        $url  = $term ? get_term_link($term) : '#';
+      $terms = get_terms([
+          'taxonomy' => 'product_cat',
+          'hide_empty' => false,
+      ]);
+      $colors = ['#EBF3FD', '#FEF6EE', '#F0FFF4', '#FDF4FF', '#FFFBEB'];
+      $count = 0;
+      if (!is_wp_error($terms) && !empty($terms)) {
+          foreach ($terms as $term):
+            if ($term->slug == 'uncategorized') continue;
+            if ($count >= 5) break;
+            
+            $thumbnail_id = get_term_meta( $term->term_id, 'thumbnail_id', true );
+            $image_url = $thumbnail_id ? wp_get_attachment_url( $thumbnail_id ) : wc_placeholder_img_src();
+            $url  = get_term_link($term);
+            $bg = $colors[$count % 5];
+            $count++;
       ?>
       <a href="<?php echo esc_url($url); ?>" class="category-card reveal">
-        <div class="category-icon" style="background:<?php echo $cat['bg']; ?>;">
-          <?php echo $cat['emoji']; ?>
+        <div class="category-icon" style="background:<?php echo $bg; ?>; padding: 0; overflow: hidden; position: relative;">
+          <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($term->name); ?>" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius-lg);">
         </div>
-        <div class="category-name"><?php echo $cat['name']; ?></div>
-        <div class="category-count"><?php echo $cat['count']; ?> sản phẩm</div>
+        <div class="category-name"><?php echo esc_html($term->name); ?></div>
+        <div class="category-count"><?php echo esc_html($term->count); ?> sản phẩm</div>
       </a>
-      <?php endforeach; ?>
+      <?php 
+          endforeach; 
+      }
+      ?>
     </div>
   </div>
 </section>
@@ -311,13 +276,7 @@ function render_product_card($product, $idx = 0) {
         <p class="section-subtitle">Những sản phẩm được yêu thích nhất cộng đồng collector</p>
       </div>
       <div style="display:flex;align-items:center;gap:16px;">
-        <!-- Tab Filter -->
-        <div class="tab-nav">
-          <button class="tab-btn active" data-tab="all">Tất cả</button>
-          <button class="tab-btn" data-tab="nendoroid">Nendoroid</button>
-          <button class="tab-btn" data-tab="scale">Scale</button>
-          <button class="tab-btn" data-tab="figma">Figma</button>
-        </div>
+
         <a href="#" class="view-all-link">
           Xem thêm
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
@@ -338,117 +297,6 @@ function render_product_card($product, $idx = 0) {
         }
       }
       ?>
-    </div>
-  </div>
-</section>
-
-<!-- =========================================================
-     BỘ SƯU TẬP SERIES ANIME
-     ========================================================= -->
-<section class="section section-alt">
-  <div class="container">
-    <div class="section-header">
-      <div class="section-header-left">
-        <div class="section-label">Collections</div>
-        <h2 class="section-title">Theo Nhân Vật & Series</h2>
-        <p class="section-subtitle">Sưu tầm đủ bộ theo anime yêu thích của bạn</p>
-      </div>
-      <a href="#" class="view-all-link">
-        Tất cả series
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-      </a>
-    </div>
-
-    <div class="series-grid">
-      <?php
-      $series_collections = [
-        [
-          'name'  => 'Demon Slayer',
-          'count' => '48 sản phẩm',
-          'badge' => 'hot',
-          'img'   => 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=600&h=450&fit=crop&q=80',
-          'color' => '#e74c3c',
-        ],
-        [
-          'name'  => 'One Piece',
-          'count' => '62 sản phẩm',
-          'badge' => '',
-          'img'   => 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&h=450&fit=crop&q=80',
-          'color' => '#f39c12',
-        ],
-        [
-          'name'  => 'Jujutsu Kaisen',
-          'count' => '35 sản phẩm',
-          'badge' => 'new',
-          'img'   => 'https://images.unsplash.com/photo-1601850494422-3cf14624b0b3?w=600&h=450&fit=crop&q=80',
-          'color' => '#9b59b6',
-        ],
-        [
-          'name'  => 'Attack on Titan',
-          'count' => '41 sản phẩm',
-          'badge' => '',
-          'img'   => 'https://images.unsplash.com/photo-1619855544858-e8e275c3b31a?w=600&h=450&fit=crop&q=80',
-          'color' => '#2ecc71',
-        ],
-      ];
-      foreach ($series_collections as $s):
-      ?>
-      <a href="#" class="series-card reveal">
-        <img src="<?php echo esc_url($s['img']); ?>" alt="<?php echo esc_attr($s['name']); ?>" loading="lazy">
-        <div class="series-card-overlay">
-          <div class="series-name"><?php echo esc_html($s['name']); ?></div>
-          <div class="series-count"><?php echo esc_html($s['count']); ?></div>
-        </div>
-        <?php if ($s['badge'] === 'hot'): ?>
-        <div class="series-card-badge">
-          <span class="badge badge-hot">🔥 Hot</span>
-        </div>
-        <?php elseif ($s['badge'] === 'new'): ?>
-        <div class="series-card-badge">
-          <span class="badge badge-new">New</span>
-        </div>
-        <?php endif; ?>
-      </a>
-      <?php endforeach; ?>
-    </div>
-  </div>
-</section>
-
-<!-- =========================================================
-     BỘ SƯU TẬP THEO HÃNG SẢN XUẤT
-     ========================================================= -->
-<section class="section">
-  <div class="container">
-    <div class="section-header">
-      <div class="section-header-left">
-        <div class="section-label">Thương hiệu</div>
-        <h2 class="section-title">Hãng Sản Xuất Uy Tín</h2>
-        <p class="section-subtitle">Chúng tôi là đại lý chính thức của các thương hiệu hàng đầu Nhật Bản</p>
-      </div>
-    </div>
-
-    <div class="brands-grid">
-      <?php
-      $brands = [
-        ['name' => 'Good Smile Company', 'short' => 'GSC',     'emoji' => '🌈', 'count' => '450+ sp', 'bg' => '#EBF3FD'],
-        ['name' => 'Max Factory',        'short' => 'MAX',     'emoji' => '🏭', 'count' => '280+ sp', 'bg' => '#FEF6EE'],
-        ['name' => 'Bandai Spirits',     'short' => 'BANDAI',  'emoji' => '🎮', 'count' => '620+ sp', 'bg' => '#F0FFF4'],
-        ['name' => 'Kotobukiya',         'short' => 'KOTO',    'emoji' => '🎌', 'count' => '180+ sp', 'bg' => '#FDF4FF'],
-        ['name' => 'Alter',              'short' => 'ALTER',   'emoji' => '✨', 'count' => '120+ sp', 'bg' => '#FFFBEB'],
-        ['name' => 'Megahouse',          'short' => 'MEGA',    'emoji' => '🏠', 'count' => '95+ sp',  'bg' => '#F0F9FF'],
-      ];
-      foreach ($brands as $brand):
-      ?>
-      <a href="#" class="brand-card reveal">
-        <div class="brand-logo" style="font-size:13px;font-weight:900;letter-spacing:0.04em;background:<?php echo $brand['bg']; ?>;width:80px;height:48px;display:flex;align-items:center;justify-content:center;border-radius:8px;">
-          <?php echo $brand['emoji'] . ' ' . $brand['short']; ?>
-        </div>
-        <div style="text-align:center;">
-          <div style="font-size:12px;font-weight:700;color:#333;margin-bottom:2px;"><?php echo $brand['name']; ?></div>
-          <div class="brand-name"><?php echo $brand['count']; ?></div>
-        </div>
-      </a>
-      <?php endforeach; ?>
     </div>
   </div>
 </section>
