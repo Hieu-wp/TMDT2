@@ -126,8 +126,8 @@
                 <p style="font-size:12px;color:#666;margin:4px 0 0;line-height:1.4;">Đăng nhập để tích điểm & nhận ưu đãi</p>
               </div>
               <div style="display:flex; flex-direction:column; gap:8px; margin-top:12px;">
-                <a href="<?php echo get_permalink( get_option('woocommerce_myaccount_page_id') ); ?>" class="btn btn-primary btn-sm" style="display:block;text-align:center;color:#fff;">Đăng nhập</a>
-                <a href="<?php echo get_permalink( get_option('woocommerce_myaccount_page_id') ); ?>" class="btn btn-outline btn-sm" style="display:block;text-align:center;box-shadow:none;">Đăng ký ngay</a>
+                <a href="<?php echo get_permalink( get_option('woocommerce_myaccount_page_id') ); ?>" class="btn btn-primary btn-sm" style="display:block;text-align:center;">Đăng nhập</a>
+                <a href="<?php echo get_permalink( get_option('woocommerce_myaccount_page_id') ); ?>" class="btn btn-outline btn-sm" style="display:block;text-align:center;">Đăng ký ngay</a>
               </div>
             <?php endif; ?>
           </div>
