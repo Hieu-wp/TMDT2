@@ -29,15 +29,15 @@ define( 'DB_USER', 'root' );
 define( 'DB_PASSWORD', '' );
 
 /** Database hostname */
-define( 'DB_HOST', '127.0.0.1:3307');
+define( 'DB_HOST', 'localhost');
 
 /** Database charset to use in creating database tables. */
 define( 'DB_CHARSET', 'utf8mb4' );
 
 /** The database collate type. Don't change this if in doubt. */
 define( 'DB_COLLATE', '' );
-define('WP_HOME', 'http://localhost/TMDT-main');
-define('WP_SITEURL', 'http://localhost/TMDT-main');
+define('WP_HOME', 'http://localhost/TMDT2');
+define('WP_SITEURL', 'http://localhost/TMDT2');
 
 
 /**#@+
