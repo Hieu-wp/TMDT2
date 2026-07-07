@@ -3169,4 +3169,332 @@ body.admin-bar .navbar {
     margin-left: auto !important;
     margin-right: auto !important;
     width: 100%;
-}
+}
+/* =========================================================
+   MY ACCOUNT REDESIGN (FIXED)
+   ========================================================= */
+
+/* 1. Main Layout */
+.woocommerce-account .woocommerce {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    grid-template-rows: auto 1fr;
+    gap: 0 30px;
+    align-items: flex-start;
+    margin-top: 20px;
+    padding-bottom: 50px;
+}
+
+/* Fix: Ép phần thông báo của Woo chiếm 100% chiều rộng để không bị dồn vào cột */
+.woocommerce-account .woocommerce > .woocommerce-notices-wrapper {
+    grid-column: 1 / -1;
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .woocommerce-account .woocommerce {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+}
+
+/* 2. Sidebar & Navigation */
+.woocommerce-MyAccount-navigation {
+    grid-column: 1;
+    grid-row: 3;
+    width: 100%;
+    flex-shrink: 0;
+    background: #fff;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 10px 15px rgba(0,0,0,0.05);
+    padding: 0 0 20px 0;
+}
+@media (max-width: 768px) {
+    .woocommerce-MyAccount-navigation {
+        width: 100%;
+        border-radius: 12px;
+    }
+}
+
+/* 3. User Profile Box */
+.animefigure-myaccount-profile {
+    grid-column: 1;
+    grid-row: 2;
+    background: #fff;
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px 20px 0 20px;
+    margin-bottom: 0;
+    border-bottom: none;
+    position: relative;
+    z-index: 2;
+}
+.animefigure-myaccount-profile::after {
+    content: '';
+    display: block;
+    width: calc(100% - 40px);
+    height: 1px;
+    background: #ececec;
+    position: absolute;
+    bottom: -10px;
+    left: 20px;
+}
+
+.am-profile-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #f1c40f; 
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+.am-profile-info {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+.am-profile-name {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #333;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.am-profile-email {
+    font-size: 0.85rem;
+    color: #888;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+/* 4. Menu Items */
+.woocommerce-MyAccount-navigation ul {
+    list-style: none;
+    margin: 0;
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.woocommerce-MyAccount-navigation ul li {
+    margin: 0;
+    padding: 0;
+}
+.woocommerce-MyAccount-navigation ul li a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    background-color: #f1f3f5;
+    color: #495057;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+.woocommerce-MyAccount-navigation ul li.is-active a,
+.woocommerce-MyAccount-navigation ul li a:hover {
+    background-color: var(--color-primary, #007bff); /* Thêm fallback color nếu biến CSS chưa chạy */
+    color: #fff;
+}
+
+/* 5. Content Area */
+.woocommerce-MyAccount-content {
+    grid-column: 2;
+    grid-row: 2 / span 2;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    padding: 30px;
+}
+.woocommerce-MyAccount-content h3,
+.woocommerce-MyAccount-content legend {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 25px;
+    color: #333;
+    border: none;
+}
+.woocommerce-MyAccount-content form .form-row {
+    margin-bottom: 20px;
+}
+.woocommerce-MyAccount-content form .form-row label {
+    font-weight: 500;
+    color: #495057;
+    margin-bottom: 8px;
+    display: block;
+}
+.woocommerce-MyAccount-content form .form-row input.input-text,
+.woocommerce-MyAccount-content form .form-row select,
+.woocommerce-MyAccount-content form .form-row textarea {
+    width: 100%;
+    padding: 12px 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 25px;
+    background-color: #fff;
+    transition: all 0.3s;
+    font-size: 0.95rem;
+    box-sizing: border-box; /* Fix: Đảm bảo padding không làm phình to thẻ input */
+}
+.woocommerce-MyAccount-content form .form-row input.input-text:focus,
+.woocommerce-MyAccount-content form .form-row select:focus,
+.woocommerce-MyAccount-content form .form-row textarea:focus {
+    border-color: var(--color-primary, #007bff);
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+    outline: none;
+}
+.woocommerce-MyAccount-content fieldset {
+    border: 1px solid #ececec;
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.woocommerce-MyAccount-content button[type="submit"] {
+    background-color: var(--color-primary, #007bff);
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    padding: 12px 40px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 15px;
+    text-transform: uppercase;
+}
+.woocommerce-MyAccount-content button[type="submit"]:hover {
+    filter: brightness(0.9); /* Dùng filter để hover tối màu đi một chút thay vì biến dark */
+}
+
+/* =========================================================
+   6. Form Layout Fix (THAY THẾ LỖI GRID CŨ)
+   ========================================================= */
+/* Clearfix cho form để không bị lỗi float */
+.woocommerce-MyAccount-content form::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* Chia đôi 2 cột cho Tên và Họ an toàn hơn thay vì dùng Grid */
+.woocommerce-MyAccount-content form .form-row-first {
+    float: left;
+    width: 48%;
+}
+.woocommerce-MyAccount-content form .form-row-last {
+    float: right;
+    width: 48%;
+}
+.woocommerce-MyAccount-content form .form-row-wide {
+    clear: both;
+    width: 100%;
+}
+
+/* Responsive cho Form khi ở màn hình điện thoại */
+@media (max-width: 768px) {
+    .woocommerce-MyAccount-content form .form-row-first,
+    .woocommerce-MyAccount-content form .form-row-last {
+        float: none;
+        width: 100%;
+    }
+}
+
+/* =========================================================
+   7. ADDRESS SECTION REDESIGN
+   ========================================================= */
+/* Address List Header & Cards */
+.woocommerce-MyAccount-content header.title h3 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+.woocommerce-Address {
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 30px;
+    position: relative;
+    background: #fff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+}
+.woocommerce-Address address {
+    font-style: normal;
+    color: #333;
+    line-height: 1.8;
+}
+.woocommerce-Address .edit {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: #f1f3f5;
+    color: #333;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0; /* hide text */
+}
+.woocommerce-Address .edit::before {
+    content: "✎";
+    font-size: 16px;
+}
+
+/* Edit Address Form Flex Layout */
+.woocommerce-address-fields .form-row,
+.woocommerce-address-fields .form-row-first,
+.woocommerce-address-fields .form-row-last,
+.woocommerce-address-fields .form-row-wide {
+    display: flex !important;
+    align-items: center;
+    gap: 20px;
+    width: 100% !important;
+    float: none !important;
+    clear: both !important;
+    margin-bottom: 20px;
+}
+.woocommerce-address-fields .form-row label {
+    flex: 0 0 30%;
+    margin: 0 !important;
+    font-weight: 500;
+    color: #333;
+}
+.woocommerce-address-fields .form-row .woocommerce-input-wrapper {
+    flex: 1;
+}
+.woocommerce-address-fields .form-row input.input-text,
+.woocommerce-address-fields .form-row select,
+.woocommerce-address-fields .form-row textarea {
+    width: 100%;
+    margin: 0;
+}
+
+/* Fix for Select2 (country/state dropdowns) */
+.woocommerce-address-fields .select2-container {
+    width: 100% !important;
+}
+
+/* Mobile fallback */
+@media (max-width: 768px) {
+    .woocommerce-address-fields .form-row {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 5px;
+    }
+    .woocommerce-address-fields .form-row label {
+        flex: auto;
+    }
+}

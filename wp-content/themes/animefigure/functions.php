@@ -301,3 +301,68 @@ function animefigure_buy_now_redirect( $url ) {
     }
     return $url;
 }
+
+/* =========================================================
+   MY ACCOUNT PAGE REDESIGN
+   ========================================================= */
+
+// 1. Rename and reorder menu items
+add_filter( 'woocommerce_account_menu_items', 'animefigure_custom_my_account_menu_items', 99 );
+function animefigure_custom_my_account_menu_items( $items ) {
+    $new_items = array(
+        'edit-account' => 'Thông tin cá nhân',
+        'orders'       => 'Đơn hàng của tôi',
+        'pre-orders'   => 'Hàng đặt trước',
+        'edit-address' => 'Địa chỉ giao hàng',
+    );
+    return $new_items;
+}
+
+// 2. Register custom endpoint for pre-orders
+add_action( 'init', 'animefigure_add_pre_orders_endpoint' );
+function animefigure_add_pre_orders_endpoint() {
+    add_rewrite_endpoint( 'pre-orders', EP_ROOT | EP_PAGES );
+}
+
+add_filter( 'query_vars', 'animefigure_pre_orders_query_vars', 0 );
+function animefigure_pre_orders_query_vars( $vars ) {
+    $vars[] = 'pre-orders';
+    return $vars;
+}
+
+// 3. Render content for custom endpoint
+add_action( 'woocommerce_account_pre-orders_endpoint', 'animefigure_pre_orders_content' );
+function animefigure_pre_orders_content() {
+    echo '<p style="color:#666;">Không tìm thấy đơn hàng phù hợp.</p>';
+}
+
+// 4. Inject User Profile Box above Navigation
+add_action( 'woocommerce_before_account_navigation', 'animefigure_add_user_profile_box' );
+function animefigure_add_user_profile_box() {
+    $current_user = wp_get_current_user();
+    if ( ! $current_user->exists() ) return;
+    
+    $display_name = $current_user->display_name;
+    $initials = mb_substr( $display_name, 0, 2 );
+    $email = $current_user->user_email;
+
+    echo '<div class="animefigure-myaccount-profile">';
+    echo '  <div class="am-profile-avatar">' . esc_html( strtoupper( $initials ) ) . '</div>';
+    echo '  <div class="am-profile-info">';
+    echo '    <div class="am-profile-name">' . esc_html( $display_name ) . '</div>';
+    echo '    <div class="am-profile-email">' . esc_html( $email ) . '</div>';
+    echo '  </div>';
+    echo '</div>';
+}
+
+// 5. Inject 'Bổ sung địa chỉ +' button after addresses list
+add_action( 'woocommerce_after_my_account_address', 'animefigure_add_address_button' );
+function animefigure_add_address_button() {
+    echo '<div style="margin-top:30px;">';
+    echo '  <a href="' . esc_url( wc_get_endpoint_url( 'edit-address', 'billing' ) ) . '" class="btn-add-address" style="display:flex;align-items:center;justify-content:center;background:var(--color-primary);color:#fff;padding:15px;border-radius:12px;text-decoration:none;font-weight:600;font-size:1.1rem;transition:0.3s;">';
+    echo '    Bổ sung địa chỉ';
+    echo '    <span style="display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;background:#fff;color:var(--color-primary);border-radius:50%;margin-left:10px;font-size:18px;font-weight:bold;line-height:0;">+</span>';
+    echo '  </a>';
+    echo '</div>';
+}
+
