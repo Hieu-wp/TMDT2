@@ -124,7 +124,7 @@
               <div class="user-info">
                 <strong>Xin chào, <?php echo esc_html( $current_user->display_name ); ?></strong>
               </div>
-              <a href="<?php echo get_permalink( get_option('woocommerce_myaccount_page_id') ); ?>">Bảng điều khiển</a>
+              <a href="<?php echo get_permalink( get_option('woocommerce_myaccount_page_id') ); ?>">Thông tin cá nhân</a>
               <a href="<?php echo wc_get_account_endpoint_url( 'orders' ); ?>">Đơn hàng của tôi</a>
               <a href="<?php echo wp_logout_url( home_url() ); ?>" style="color:#EB5757; border-top:1px solid #eee; margin-top:8px; padding-top:12px;">Đăng xuất</a>
             <?php else : ?>
