@@ -79,6 +79,7 @@ function animefigure_enqueue_assets() {
         'nonce'     => wp_create_nonce( 'animefigure_nonce' ),
         'siteUrl'   => get_site_url(),
         'currency'  => get_woocommerce_currency_symbol(),
+        'myAccountUrl' => wc_get_page_permalink( 'myaccount' ),
     ] );
 
     if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
@@ -239,17 +240,23 @@ function animefigure_get_bestsellers( $limit = 10 ) {
 function animefigure_toggle_wishlist() {
     check_ajax_referer( 'animefigure_nonce', 'nonce' );
     $product_id = intval( $_POST['product_id'] ?? 0 );
-    $wishlist   = (array) ( get_user_meta( get_current_user_id(), '_wishlist', true ) ?: [] );
+    $user_id = get_current_user_id();
+
+    if ( ! $user_id ) {
+        wp_send_json_error( [ 'message' => 'login_required' ], 401 );
+    }
+
+    $wishlist = (array) ( get_user_meta( $user_id, '_wishlist', true ) ?: [] );
 
     if ( in_array( $product_id, $wishlist ) ) {
-        $wishlist = array_diff( $wishlist, [ $product_id ] );
+        $wishlist = array_values( array_diff( $wishlist, [ $product_id ] ) );
         $action   = 'removed';
     } else {
         $wishlist[] = $product_id;
         $action     = 'added';
     }
 
-    update_user_meta( get_current_user_id(), '_wishlist', $wishlist );
+    update_user_meta( $user_id, '_wishlist', $wishlist );
     wp_send_json_success( [ 'action' => $action, 'count' => count( $wishlist ) ] );
 }
 add_action( 'wp_ajax_animefigure_wishlist', 'animefigure_toggle_wishlist' );
@@ -352,3 +359,53 @@ function animefigure_apply_posted_password_to_customer( $customer_id, $new_custo
     $password = wp_unslash( $_POST['password'] );
     wp_set_password( $password, intval( $customer_id ) );
 }
+
+
+/**
+ * Ensure a Wishlist page exists at /wishlist and uses the `page-wishlist.php` template.
+ * This prevents 404 when header links point to /wishlist.
+ */
+function animefigure_ensure_wishlist_page() {
+    // Only run on init in admin or front, cheap checks
+    $slug = 'wishlist';
+    $page = get_page_by_path( $slug );
+
+    if ( $page ) {
+        // If page exists but doesn't have our template, set it
+        $current_template = get_post_meta( $page->ID, '_wp_page_template', true );
+        if ( 'page-wishlist.php' !== $current_template ) {
+            update_post_meta( $page->ID, '_wp_page_template', 'page-wishlist.php' );
+        }
+        return;
+    }
+
+    // Create the page programmatically
+    $page_id = wp_insert_post( [
+        'post_title'   => 'Wishlist',
+        'post_name'    => $slug,
+        'post_status'  => 'publish',
+        'post_type'    => 'page',
+        'post_content' => '',
+    ] );
+
+    if ( ! is_wp_error( $page_id ) && $page_id ) {
+        update_post_meta( $page_id, '_wp_page_template', 'page-wishlist.php' );
+    }
+}
+add_action( 'init', 'animefigure_ensure_wishlist_page' );
+
+/**
+ * Ensure rewrite rule for /wishlist exists so direct URL resolves even if
+ * the Page entry is missing or permalinks behave strangely on local setups.
+ * Flush rewrite rules once after adding the rule to apply it.
+ */
+function animefigure_register_wishlist_rewrite() {
+    add_rewrite_rule( '^wishlist/?$', 'index.php?pagename=wishlist', 'top' );
+
+    // Flush rewrite rules once after registering the rule to avoid 404s on fresh installs.
+    if ( get_option( 'animefigure_wishlist_rewrite_applied' ) !== '1' ) {
+        flush_rewrite_rules( false );
+        update_option( 'animefigure_wishlist_rewrite_applied', '1' );
+    }
+}
+add_action( 'init', 'animefigure_register_wishlist_rewrite', 20 );

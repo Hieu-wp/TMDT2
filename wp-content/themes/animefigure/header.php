@@ -62,7 +62,14 @@
         <!-- Wishlist -->
         <a class="action-btn" href="<?php echo home_url('/wishlist'); ?>" aria-label="Danh sách yêu thích" title="Wishlist">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
-          <span class="action-badge" id="wishlist-count">0</span>
+          <?php
+            $wishlist_count = 0;
+            if ( is_user_logged_in() ) {
+                $wl = (array) get_user_meta( get_current_user_id(), '_wishlist', true );
+                $wishlist_count = count( $wl );
+            }
+          ?>
+          <span class="action-badge" id="wishlist-count"><?php echo intval( $wishlist_count ); ?></span>
         </a>
 
         <!-- Cart -->
