@@ -13,6 +13,8 @@ define( 'ANIMEFIGURE_URI', get_template_directory_uri() );
 /* =========================================================
    THEME SETUP
    ========================================================= */
+require_once ANIMEFIGURE_DIR . '/inc/characters.php';
+
 function animefigure_setup() {
     add_theme_support( 'title-tag' );
     add_theme_support( 'post-thumbnails' );
