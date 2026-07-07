@@ -9,7 +9,9 @@ get_header();
   <div class="container" style="padding-top:40px;padding-bottom:80px;max-width:900px;">
     <?php while (have_posts()): the_post(); ?>
     <article id="page-<?php the_ID(); ?>" <?php post_class(); ?>>
+      <?php if ( ! ( function_exists( 'is_account_page' ) && is_account_page() && ! is_user_logged_in() ) ) : ?>
       <h1 style="font-size:2rem;font-weight:800;margin-bottom:24px;color:#222;"><?php the_title(); ?></h1>
+      <?php endif; ?>
       <div class="entry-content" style="line-height:1.8;font-size:16px;color:#444;">
         <?php the_content(); ?>
       </div>

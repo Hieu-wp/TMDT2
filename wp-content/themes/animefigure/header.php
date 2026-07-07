@@ -127,7 +127,7 @@
               </div>
               <div style="display:flex; flex-direction:column; gap:8px; margin-top:12px;">
                 <a href="<?php echo get_permalink( get_option('woocommerce_myaccount_page_id') ); ?>" class="btn btn-primary btn-sm" style="display:block;text-align:center;">Đăng nhập</a>
-                <a href="<?php echo get_permalink( get_option('woocommerce_myaccount_page_id') ); ?>" class="btn btn-outline btn-sm" style="display:block;text-align:center;">Đăng ký ngay</a>
+                <a href="<?php echo esc_url( add_query_arg( 'action', 'register', get_permalink( get_option('woocommerce_myaccount_page_id') ) ) ); ?>" class="btn btn-outline btn-sm" style="display:block;text-align:center;">Đăng ký ngay</a>
               </div>
             <?php endif; ?>
           </div>
