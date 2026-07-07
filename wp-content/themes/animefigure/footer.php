@@ -48,11 +48,12 @@
         <div class="footer-links">
           <a href="#">Hướng dẫn đặt hàng</a>
           <a href="#">Chính sách vận chuyển</a>
-          <a href="#">Chính sách đổi trả</a>
-          <a href="#">Chính sách bảo hành</a>
+          <a href="http://localhost/TMDT-main/index.php/hoan-tien-tra-hang/">Chính sách đổi trả</a>
+          <a href="http://localhost/TMDT-main/index.php/thong-tin-chinh-sach-bao-hanh-san-pham/">Chính sách bảo hành</a>
           <a href="#">Câu hỏi thường gặp</a>
           <a href="#">Theo dõi đơn hàng</a>
-          <a href="#">Tra cứu bảo hành</a>
+
+          <a href="http://localhost/TMDT-main/index.php/chinh-sach-bao-mat-thong-tin/">Chính sách bảo mật</a>
         </div>
       </div>
 
