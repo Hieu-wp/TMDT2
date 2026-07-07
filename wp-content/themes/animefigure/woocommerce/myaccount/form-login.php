@@ -32,7 +32,12 @@ $default_tab = ( isset( $_GET['action'] ) && 'register' === $_GET['action'] ) ? 
             
             <div id="customer_login" class="af-form-container">
                 <div class="af-form-pane<?php echo 'login' === $default_tab ? ' active' : ''; ?>" id="pane-login">
-
+                    <?php if ( ! empty( $_GET['registered_user'] ) ) : ?>
+                        <div class="af-registered-notice">
+                            <p>Đăng ký thành công! Tên đăng nhập của bạn là: <strong><?php echo esc_html( urldecode( wp_unslash( $_GET['registered_user'] ) ) ); ?></strong></p>
+                            <p>Vui lòng đăng nhập bằng email hoặc tên đăng nhập và mật khẩu bạn vừa tạo.</p>
+                        </div>
+                    <?php endif; ?>
 
                     <form class="woocommerce-form woocommerce-form-login login af-custom-form" method="post">
                         <?php do_action( 'woocommerce_login_form_start' ); ?>

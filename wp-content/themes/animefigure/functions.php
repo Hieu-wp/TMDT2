@@ -299,3 +299,54 @@ function animefigure_buy_now_redirect( $url ) {
     }
     return $url;
 }
+
+add_filter( 'woocommerce_registration_generate_username', '__return_true' );
+add_filter( 'woocommerce_registration_generate_password', '__return_false' );
+add_filter( 'woocommerce_registration_redirect', 'animefigure_registration_redirect' );
+add_action( 'woocommerce_created_customer', 'animefigure_store_registration_username', 10, 3 );
+
+function animefigure_store_registration_username( $customer_id, $new_customer_data, $password_generated ) {
+    $user = get_userdata( $customer_id );
+    if ( $user ) {
+        $GLOBALS['animefigure_registered_username'] = $user->user_login;
+    }
+}
+
+function animefigure_registration_redirect( $redirect ) {
+    $user_login = isset( $GLOBALS['animefigure_registered_username'] ) ? $GLOBALS['animefigure_registered_username'] : '';
+    $redirect_url = wc_get_page_permalink( 'myaccount' ) . '?action=login';
+    if ( $user_login ) {
+        $redirect_url = add_query_arg( 'registered_user', urlencode( $user_login ), $redirect_url );
+    }
+    return $redirect_url;
+}
+
+add_filter( 'authenticate', 'animefigure_allow_email_login', 20, 3 );
+function animefigure_allow_email_login( $user, $username, $password ) {
+    if ( is_wp_error( $user ) && ! empty( $username ) && is_email( $username ) ) {
+        $user_data = get_user_by( 'email', $username );
+        if ( $user_data ) {
+            $user = wp_authenticate_username_password( null, $user_data->user_login, $password );
+        }
+    }
+    return $user;
+}
+
+/**
+ * Make sure an entered password is applied when a customer registers.
+ * This prevents WooCommerce from generating a different temporary password.
+ */
+add_action( 'woocommerce_created_customer', 'animefigure_apply_posted_password_to_customer', 10, 3 );
+function animefigure_apply_posted_password_to_customer( $customer_id, $new_customer_data, $password_generated ) {
+    if ( empty( $_POST['password'] ) ) {
+        return;
+    }
+
+    $nonce = isset( $_POST['woocommerce-register-nonce'] ) ? wp_unslash( $_POST['woocommerce-register-nonce'] ) : '';
+    if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, 'woocommerce-register' ) ) {
+        return;
+    }
+
+    $password = wp_unslash( $_POST['password'] );
+    wp_set_password( $password, intval( $customer_id ) );
+}
