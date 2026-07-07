@@ -437,44 +437,139 @@ function animefigure_get_page_url( $slug ) {
 /**
  * Create core store policy pages with useful starter content.
  */
-function animefigure_ensure_static_pages() {
-    $created_page = false;
-    $pages = [
+function animefigure_static_page_specs() {
+    return [
         'chinh-sach-bao-mat' => [
-            'title'   => 'Chính sách bảo mật',
-            'content' => '<div class="af-static-page"><p>AnimeFigure cam kết bảo vệ thông tin cá nhân của khách hàng khi mua sắm và sử dụng dịch vụ tại website.</p><h2>Thông tin thu thập</h2><p>Chúng tôi có thể thu thập họ tên, số điện thoại, email, địa chỉ giao hàng và thông tin đơn hàng để xử lý giao dịch, chăm sóc khách hàng và cải thiện dịch vụ.</p><h2>Mục đích sử dụng</h2><p>Thông tin được dùng để xác nhận đơn hàng, giao hàng, bảo hành, gửi thông báo liên quan đến giao dịch và các ưu đãi khi khách hàng đồng ý nhận tin.</p><h2>Bảo mật dữ liệu</h2><p>Dữ liệu khách hàng được lưu trữ trong hệ thống quản trị website và chỉ được truy cập bởi nhân sự có trách nhiệm xử lý đơn hàng hoặc hỗ trợ khách hàng.</p><h2>Quyền của khách hàng</h2><p>Khách hàng có thể yêu cầu kiểm tra, cập nhật hoặc xóa thông tin cá nhân bằng cách liên hệ hello@animefigure.vn.</p></div>',
+            'title' => 'Chính sách bảo mật',
+            'focus' => 'bảo mật thông tin cá nhân, dữ liệu đơn hàng và quyền riêng tư của khách hàng',
+            'audience' => 'khách hàng mua figure, người đăng ký tài khoản và người liên hệ tư vấn',
         ],
         'chinh-sach-doi-tra' => [
-            'title'   => 'Chính sách đổi trả',
-            'content' => '<div class="af-static-page"><p>AnimeFigure hỗ trợ đổi trả nhằm đảm bảo khách hàng nhận đúng sản phẩm và tình trạng đã cam kết.</p><h2>Điều kiện đổi trả</h2><p>Sản phẩm được hỗ trợ đổi trả trong vòng 30 ngày kể từ ngày nhận hàng nếu giao sai mẫu, thiếu phụ kiện, lỗi sản xuất hoặc hư hỏng do vận chuyển.</p><h2>Trường hợp không áp dụng</h2><p>Không áp dụng đổi trả với sản phẩm đã qua sử dụng, mất hộp/phụ kiện, tem bảo hành bị rách hoặc lỗi phát sinh do bảo quản không đúng hướng dẫn.</p><h2>Quy trình xử lý</h2><p>Khách hàng vui lòng gửi mã đơn hàng, hình ảnh/video tình trạng sản phẩm và thông tin liên hệ. AnimeFigure sẽ phản hồi hướng xử lý trong 24-48 giờ làm việc.</p></div>',
+            'title' => 'Chính sách đổi trả',
+            'focus' => 'điều kiện đổi trả, quy trình tiếp nhận, bằng chứng cần cung cấp và phương án xử lý sản phẩm',
+            'audience' => 'khách hàng đã nhận hàng, khách đặt pre-order và người cần hỗ trợ sau mua',
         ],
         'chinh-sach-van-chuyen' => [
-            'title'   => 'Chính sách vận chuyển',
-            'content' => '<div class="af-static-page"><p>AnimeFigure giao hàng toàn quốc thông qua các đối tác vận chuyển uy tín, ưu tiên đóng gói an toàn cho figure và hộp sưu tầm.</p><h2>Thời gian giao hàng</h2><p>Nội thành TP.HCM thường từ 1-2 ngày làm việc. Các tỉnh thành khác thường từ 2-5 ngày làm việc tùy khu vực và điều kiện vận chuyển.</p><h2>Phí vận chuyển</h2><p>Phí vận chuyển được hiển thị khi đặt hàng và có thể thay đổi theo địa chỉ, kích thước sản phẩm hoặc chương trình ưu đãi tại thời điểm mua.</p><h2>Kiểm tra khi nhận hàng</h2><p>Khách hàng nên quay video khi mở kiện hàng để AnimeFigure có cơ sở hỗ trợ nhanh trong trường hợp sản phẩm bị ảnh hưởng trong quá trình vận chuyển.</p></div>',
+            'title' => 'Chính sách vận chuyển',
+            'focus' => 'đóng gói, bàn giao vận chuyển, thời gian giao hàng, phí giao hàng và xử lý rủi ro khi giao nhận',
+            'audience' => 'khách hàng đặt hàng trên toàn quốc và người nhận hàng thay',
         ],
         'chinh-sach-bao-hanh' => [
-            'title'   => 'Chính sách bảo hành',
-            'content' => '<div class="af-static-page"><p>AnimeFigure hỗ trợ bảo hành cho các sản phẩm chính hãng theo điều kiện của nhà sản xuất và tình trạng thực tế của sản phẩm.</p><h2>Phạm vi bảo hành</h2><p>Bảo hành áp dụng cho lỗi sản xuất như thiếu chi tiết, lỗi khớp nối, lỗi sơn nghiêm trọng hoặc phụ kiện không đúng mô tả khi nhận hàng.</p><h2>Thời hạn hỗ trợ</h2><p>Khách hàng nên liên hệ trong vòng 7 ngày sau khi nhận hàng đối với lỗi ngoại quan và trong thời hạn bảo hành được công bố đối với từng sản phẩm cụ thể.</p><h2>Hồ sơ cần cung cấp</h2><p>Vui lòng cung cấp mã đơn hàng, hình ảnh/video lỗi, hộp sản phẩm và phụ kiện liên quan để đội ngũ hỗ trợ kiểm tra.</p></div>',
+            'title' => 'Chính sách bảo hành',
+            'focus' => 'phạm vi bảo hành, lỗi sản xuất, hồ sơ tiếp nhận và cách AnimeFigure phối hợp hỗ trợ',
+            'audience' => 'người sưu tầm figure chính hãng và khách hàng cần kiểm tra lỗi sau khi nhận sản phẩm',
         ],
         'chinh-sach-thanh-toan' => [
-            'title'   => 'Chính sách thanh toán',
-            'content' => '<div class="af-static-page"><p>AnimeFigure hỗ trợ nhiều phương thức thanh toán để khách hàng mua sắm thuận tiện và an toàn.</p><h2>Phương thức thanh toán</h2><p>Khách hàng có thể thanh toán khi nhận hàng (COD), chuyển khoản ngân hàng, ví điện tử hoặc cổng thanh toán trực tuyến tùy thời điểm hệ thống hỗ trợ.</p><h2>Xác nhận thanh toán</h2><p>Với đơn chuyển khoản, đơn hàng sẽ được xử lý sau khi AnimeFigure xác nhận giao dịch thành công. Nội dung chuyển khoản nên bao gồm mã đơn hàng hoặc số điện thoại đặt hàng.</p><h2>Hoàn tiền</h2><p>Trường hợp đơn hàng đủ điều kiện hoàn tiền, thời gian xử lý thường từ 3-7 ngày làm việc tùy phương thức thanh toán.</p></div>',
+            'title' => 'Chính sách thanh toán',
+            'focus' => 'phương thức thanh toán, xác nhận giao dịch, hoàn tiền, đặt cọc và an toàn thanh toán',
+            'audience' => 'khách hàng mua trực tiếp, đặt online, đặt cọc pre-order và thanh toán qua đối tác',
         ],
         'dieu-khoan-su-dung' => [
-            'title'   => 'Điều khoản sử dụng',
-            'content' => '<div class="af-static-page"><p>Khi truy cập và mua sắm tại AnimeFigure, khách hàng đồng ý tuân thủ các điều khoản sử dụng được công bố trên website.</p><h2>Thông tin sản phẩm</h2><p>AnimeFigure cố gắng hiển thị thông tin, hình ảnh, giá bán và tình trạng hàng chính xác nhất. Một số chi tiết có thể thay đổi theo cập nhật từ nhà sản xuất hoặc nhà phân phối.</p><h2>Đặt hàng và xác nhận</h2><p>Đơn hàng chỉ được xem là hợp lệ sau khi hệ thống ghi nhận thông tin và AnimeFigure xác nhận khả năng cung ứng sản phẩm.</p><h2>Trách nhiệm khách hàng</h2><p>Khách hàng cần cung cấp thông tin liên hệ, địa chỉ giao hàng và thông tin thanh toán chính xác để quá trình xử lý đơn hàng diễn ra thuận lợi.</p><h2>Thay đổi điều khoản</h2><p>AnimeFigure có thể cập nhật điều khoản sử dụng để phù hợp với hoạt động kinh doanh và quy định hiện hành. Phiên bản mới sẽ có hiệu lực khi được đăng tải trên website.</p></div>',
+            'title' => 'Điều khoản sử dụng',
+            'focus' => 'quy tắc sử dụng website, trách nhiệm của khách hàng, quyền của cửa hàng và giới hạn dịch vụ',
+            'audience' => 'mọi người truy cập website AnimeFigure, tạo tài khoản hoặc phát sinh giao dịch',
         ],
         'gioi-thieu' => [
-            'title'   => 'Giới thiệu',
-            'content' => '<div class="af-static-page"><p>AnimeFigure là cửa hàng mô hình anime chính hãng dành cho người sưu tầm tại Việt Nam.</p><h2>Chúng tôi bán gì?</h2><p>Cửa hàng tập trung vào Nendoroid, Scale Figure, Figma, Pop Up Parade, Plushie, Statue và các sản phẩm pre-order từ những thương hiệu uy tín.</p><h2>Cam kết</h2><p>AnimeFigure ưu tiên nguồn hàng rõ ràng, đóng gói cẩn thận, tư vấn đúng nhu cầu và hỗ trợ khách hàng sau mua.</p><h2>Dành cho cộng đồng sưu tầm</h2><p>Chúng tôi mong muốn tạo một nơi mua sắm dễ tin cậy, dễ hỏi và đủ chỉn chu cho cả người mới bắt đầu lẫn nhà sưu tầm lâu năm.</p></div>',
+            'title' => 'Giới thiệu',
+            'focus' => 'câu chuyện thương hiệu, định hướng kinh doanh figure chính hãng và cam kết phục vụ cộng đồng sưu tầm',
+            'audience' => 'người mới sưu tầm, khách hàng thân thiết và cộng đồng yêu thích anime figure',
         ],
         'lien-he' => [
-            'title'   => 'Liên hệ',
-            'content' => '<div class="af-static-page af-contact-page"><p>AnimeFigure luôn sẵn sàng hỗ trợ bạn về đơn hàng, bảo hành, pre-order và tư vấn sản phẩm.</p><div class="af-contact-grid"><div><h2>Thông tin cửa hàng</h2><p><strong>Địa chỉ:</strong> 123 Nguyễn Huệ, Quận 1, TP.HCM, Việt Nam</p><p><strong>Hotline:</strong> 1800-9999</p><p><strong>Email:</strong> hello@animefigure.vn</p><p><strong>Thời gian:</strong> Thứ 2 - Thứ 7: 8:00 - 20:00, Chủ nhật: 9:00 - 17:00</p></div><div><h2>Gửi yêu cầu hỗ trợ</h2><p>Vui lòng gửi email kèm mã đơn hàng nếu bạn cần hỗ trợ đổi trả, bảo hành hoặc kiểm tra trạng thái pre-order.</p><p>Đội ngũ AnimeFigure thường phản hồi trong 24-48 giờ làm việc.</p></div></div></div>',
+            'title' => 'Liên hệ',
+            'focus' => 'kênh liên hệ, thời gian phản hồi, cách gửi yêu cầu hỗ trợ và thông tin cần chuẩn bị',
+            'audience' => 'khách hàng cần tư vấn sản phẩm, kiểm tra đơn hàng, bảo hành hoặc hỗ trợ pre-order',
         ],
     ];
+}
+
+function animefigure_static_page_sections( $slug ) {
+    $shared = [
+        'Mục đích và phạm vi áp dụng',
+        'Đối tượng được áp dụng',
+        'Nguyên tắc xử lý yêu cầu',
+        'Thông tin khách hàng cần chuẩn bị',
+        'Quy trình tiếp nhận tại AnimeFigure',
+        'Thời gian phản hồi dự kiến',
+        'Trường hợp cần xác minh thêm',
+        'Trách nhiệm của khách hàng',
+        'Trách nhiệm của AnimeFigure',
+        'Tiêu chuẩn thông tin và bằng chứng',
+        'Các tình huống thường gặp',
+        'Trường hợp ngoại lệ',
+        'Cách ghi nhận và lưu trữ hồ sơ',
+        'Phối hợp với đối tác liên quan',
+        'Quy định đối với sản phẩm pre-order',
+        'Quy định đối với sản phẩm có sẵn',
+        'Quy định đối với sản phẩm khuyến mãi',
+        'Quy định đối với quà tặng và phụ kiện',
+        'Cách xử lý khi phát sinh sai lệch',
+        'Cách xử lý khi khách hàng đổi thông tin',
+        'Cam kết minh bạch thông tin',
+        'Giới hạn trách nhiệm hợp lý',
+        'Khuyến nghị trước khi xác nhận giao dịch',
+        'Khuyến nghị sau khi hoàn tất giao dịch',
+        'Kênh hỗ trợ chính thức',
+        'Bảo lưu và cập nhật chính sách',
+        'Ví dụ minh họa trong thực tế',
+        'Lưu ý dành cho người mới mua figure',
+        'Lưu ý dành cho nhà sưu tầm lâu năm',
+        'Tóm tắt quyền lợi và nghĩa vụ',
+    ];
+
+    $prefixes = [
+        'chinh-sach-bao-mat' => [ 'Dữ liệu cá nhân', 'Bảo mật tài khoản', 'Email và số điện thoại', 'Lịch sử đơn hàng', 'Cookie và phiên truy cập' ],
+        'chinh-sach-doi-tra' => [ 'Điều kiện đổi trả', 'Tình trạng hộp sản phẩm', 'Video mở kiện', 'Chi phí phát sinh', 'Phương án đổi sản phẩm' ],
+        'chinh-sach-van-chuyen' => [ 'Đóng gói figure', 'Bàn giao vận chuyển', 'Theo dõi vận đơn', 'Khu vực giao hàng', 'Xử lý kiện hàng móp vỡ' ],
+        'chinh-sach-bao-hanh' => [ 'Lỗi sản xuất', 'Phụ kiện đi kèm', 'Khớp nối và chi tiết nhỏ', 'Tem và hóa đơn', 'Thẩm định tình trạng sản phẩm' ],
+        'chinh-sach-thanh-toan' => [ 'COD', 'Chuyển khoản', 'Ví điện tử', 'Đặt cọc pre-order', 'Hoàn tiền' ],
+        'dieu-khoan-su-dung' => [ 'Tài khoản website', 'Nội dung hiển thị', 'Quyền truy cập', 'Giao dịch hợp lệ', 'Hành vi không được phép' ],
+        'gioi-thieu' => [ 'Câu chuyện AnimeFigure', 'Sản phẩm chính hãng', 'Đội ngũ tư vấn', 'Cộng đồng sưu tầm', 'Tầm nhìn dịch vụ' ],
+        'lien-he' => [ 'Hotline', 'Email hỗ trợ', 'Thông tin đơn hàng', 'Yêu cầu bảo hành', 'Tư vấn pre-order' ],
+    ];
+
+    $sections = [];
+    foreach ( $prefixes[ $slug ] ?? [] as $prefix ) {
+        $sections[] = $prefix;
+    }
+
+    return array_slice( array_merge( $sections, $shared ), 0, 18 );
+}
+
+function animefigure_build_long_static_content( $slug, $page ) {
+    $title = $page['title'];
+    $focus = $page['focus'];
+    $audience = $page['audience'];
+    $sections = animefigure_static_page_sections( $slug );
+    $html = '<div class="af-static-page">';
+    $html .= '<p>' . esc_html( $title ) . ' này được xây dựng để giải thích rõ ' . esc_html( $focus ) . '. Nội dung áp dụng cho ' . esc_html( $audience ) . ', đồng thời giúp khách hàng hiểu trước các bước cần thực hiện khi mua sắm tại AnimeFigure.</p>';
+    $html .= '<p>Vì sản phẩm figure thường có hộp sưu tầm, phụ kiện nhỏ, tình trạng pre-order và giá trị trưng bày cao, AnimeFigure trình bày chính sách theo nhiều mục chi tiết để hạn chế hiểu nhầm. Khách hàng nên đọc kỹ từng phần trước khi đặt hàng, thanh toán, gửi yêu cầu hỗ trợ hoặc cung cấp thông tin cá nhân.</p>';
+
+    foreach ( $sections as $index => $section_title ) {
+        $number = $index + 1;
+        $html .= '<h2>' . esc_html( $number . '. ' . $section_title ) . '</h2>';
+        $html .= '<p>Mục ' . esc_html( $section_title ) . ' là một phần quan trọng trong ' . esc_html( strtolower( $title ) ) . '. Khi áp dụng nội dung này, AnimeFigure luôn ưu tiên cách hiểu rõ ràng, có căn cứ và phù hợp với đặc thù của mô hình anime chính hãng. Khách hàng nên xem đây là hướng dẫn tham khảo chính thức để biết quyền lợi của mình, phạm vi hỗ trợ của cửa hàng và những thông tin cần chuẩn bị trước khi gửi yêu cầu.</p>';
+        $html .= '<p>Đối với ' . esc_html( $audience ) . ', việc cung cấp thông tin đầy đủ giúp quá trình xử lý nhanh hơn và giảm khả năng phải bổ sung nhiều lần. Các thông tin như mã đơn hàng, tên sản phẩm, thời điểm đặt hàng, hình ảnh thực tế, video mở kiện, email liên hệ hoặc số điện thoại có thể được yêu cầu tùy tình huống. AnimeFigure chỉ sử dụng các thông tin đó cho mục đích kiểm tra, đối chiếu và hỗ trợ đúng yêu cầu.</p>';
+        $html .= '<p>Trong quá trình xử lý ' . esc_html( $focus ) . ', AnimeFigure có thể cần kiểm tra lại lịch sử giao dịch, tình trạng tồn kho, thông tin từ đối tác vận chuyển, thông tin từ nhà phân phối hoặc điều kiện cụ thể của từng sản phẩm. Một số trường hợp đơn giản có thể được phản hồi rất nhanh, nhưng các trường hợp cần thẩm định chi tiết có thể mất thêm thời gian để đảm bảo kết quả cuối cùng công bằng và chính xác.</p>';
+        $html .= '<p>Ví dụ, nếu nội dung liên quan đến sản phẩm pre-order, thời gian xử lý thường phụ thuộc vào lịch phát hành, đợt hàng về, thông báo của hãng và tiến độ nhập khẩu. Nếu nội dung liên quan đến sản phẩm có sẵn, AnimeFigure sẽ ưu tiên kiểm tra tình trạng đóng gói, hình ảnh bàn giao và thông tin đơn hàng. Với mỗi tình huống, cửa hàng sẽ cố gắng giải thích lý do xử lý để khách hàng có thể theo dõi dễ dàng.</p>';
+        $html .= '<p>Khách hàng cần lưu ý rằng chính sách này không thay thế cho thỏa thuận riêng đã được AnimeFigure xác nhận bằng văn bản, email hoặc tin nhắn chính thức trong những trường hợp đặc biệt. Nếu có điểm chưa rõ, khách hàng nên liên hệ trước khi tự thực hiện các thao tác có thể ảnh hưởng đến quyền lợi, chẳng hạn như tự sửa sản phẩm, bỏ hộp, gửi hàng về sai địa chỉ hoặc chuyển khoản thiếu nội dung xác nhận.</p>';
+        $html .= '<p>AnimeFigure khuyến khích khách hàng lưu lại hóa đơn, email xác nhận, ảnh chụp màn hình giao dịch và tình trạng sản phẩm khi nhận hàng. Những dữ liệu này không chỉ giúp bảo vệ quyền lợi của khách hàng mà còn giúp cửa hàng cải thiện quy trình vận hành, đóng gói, tư vấn và chăm sóc sau bán. Mọi phản hồi có thiện chí đều được xem là cơ sở để dịch vụ ngày càng rõ ràng, ổn định và đáng tin cậy hơn.</p>';
+    }
+
+    $html .= '<h2>Thông tin liên hệ hỗ trợ</h2>';
+    $html .= '<p>Nếu cần làm rõ bất kỳ nội dung nào trong trang này, khách hàng có thể liên hệ AnimeFigure qua hotline 1800-9999 hoặc email hello@animefigure.vn. Khi gửi yêu cầu, vui lòng mô tả ngắn gọn vấn đề, đính kèm mã đơn hàng nếu có và cung cấp hình ảnh hoặc tài liệu liên quan để đội ngũ hỗ trợ có thể kiểm tra chính xác.</p>';
+    $html .= '</div>';
+
+    return $html;
+}
+
+function animefigure_ensure_static_pages() {
+    $created_page = false;
+    $content_version = '2026-07-long-static-pages-v2';
+    $should_refresh_content = get_option( 'animefigure_static_pages_content_version' ) !== $content_version;
+    $pages = animefigure_static_page_specs();
 
     foreach ( $pages as $slug => $page ) {
+        $page['content'] = animefigure_build_long_static_content( $slug, $page );
         $existing_page = get_page_by_path( $slug );
 
         if ( $existing_page ) {
@@ -484,7 +579,7 @@ function animefigure_ensure_static_pages() {
                 $page_update['post_status'] = 'publish';
             }
 
-            if ( '' === trim( $existing_page->post_content ) ) {
+            if ( $should_refresh_content || '' === trim( $existing_page->post_content ) ) {
                 $page_update['post_content'] = $page['content'];
             }
 
@@ -514,6 +609,10 @@ function animefigure_ensure_static_pages() {
     if ( $created_page || get_option( 'animefigure_static_pages_rewrite_applied' ) !== '1' ) {
         flush_rewrite_rules( false );
         update_option( 'animefigure_static_pages_rewrite_applied', '1' );
+    }
+
+    if ( $should_refresh_content ) {
+        update_option( 'animefigure_static_pages_content_version', $content_version );
     }
 }
 add_action( 'init', 'animefigure_ensure_static_pages', 30 );
