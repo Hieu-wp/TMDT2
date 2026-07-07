@@ -410,7 +410,6 @@ function animefigure_register_wishlist_rewrite() {
     }
 }
 add_action( 'init', 'animefigure_register_wishlist_rewrite', 20 );
-=======
 /* =========================================================
    MY ACCOUNT PAGE REDESIGN
    ========================================================= */
