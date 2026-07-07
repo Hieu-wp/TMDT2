@@ -32,25 +32,72 @@ get_header();
             $product = wc_get_product( $product_id );
             if ( ! $product ) continue;
           ?>
-          <div class="wishlist-item card" style="background:#fff;padding:12px;border-radius:12px;border:1px solid #eee;display:flex;flex-direction:column;gap:12px;">
-            <a href="<?php echo get_permalink( $product_id ); ?>" style="display:block;aspect-ratio:3/4;overflow:hidden;border-radius:8px;">
-              <img src="<?php echo esc_url( get_the_post_thumbnail_url( $product_id, 'medium' ) ); ?>" alt="<?php echo esc_attr( $product->get_name() ); ?>" style="width:100%;height:100%;object-fit:cover;"/>
-            </a>
-            <div style="flex:1;">
-              <a href="<?php echo get_permalink( $product_id ); ?>" style="font-weight:700;color:var(--color-text);display:block;margin-bottom:6px;"><?php echo esc_html( $product->get_name() ); ?></a>
-              <div style="font-weight:800;color:#2F80ED;font-size:1.05rem;"><?php echo $product->get_price_html(); ?></div>
+          <div class="product-card reveal">
+            <div class="product-card-image-wrap">
+
+              <!-- Badge -->
+              <div class="product-badge">
+                <?php if ( $product->is_on_sale() ): ?>
+                  <span class="badge badge-sale">Sale</span>
+                <?php endif; ?>
+                <?php 
+                $created_days = ( time() - strtotime( $product->get_date_created() ) ) / ( 60 * 60 * 24 );
+                if ( $created_days < 14 ): ?>
+                  <span class="badge badge-new">New</span>
+                <?php endif; ?>
+              </div>
+
+              <!-- Wishlist -->
+              <button class="product-wishlist-btn active" data-id="<?php echo esc_attr( $product->get_id() ); ?>" aria-label="Xóa khỏi wishlist">
+                <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+              </button>
+
+              <!-- Image -->
+              <a href="<?php echo esc_url( $product->get_permalink() ); ?>">
+                <?php 
+                if ( $product->get_image_id() ) {
+                  echo $product->get_image( 'woocommerce_thumbnail', [ 'loading' => 'lazy', 'alt' => esc_attr( $product->get_name() ) ] );
+                } else {
+                  echo '<div class="img-placeholder" style="width:100%;height:100%;aspect-ratio:3/4;background:#f0f4f8;display:flex;align-items:center;justify-content:center;font-size:48px;">🎭</div>';
+                }
+                ?>
+              </a>
+
+              <!-- Overlay actions -->
+              <div class="product-card-overlay">
+                <a href="<?php echo esc_url( $product->get_permalink() ); ?>" class="btn-quickview" style="display:flex;justify-content:center;text-decoration:none;align-items:center;padding:12px;background:rgba(255,255,255,0.95);border-radius:24px;font-weight:600;font-size:13px;color:#222;margin-bottom:8px;">
+                  👁 Xem chi tiết
+                </a>
+                <a href="?add-to-cart=<?php echo esc_attr( $product->get_id() ); ?>" data-quantity="1" class="btn-addtocart ajax_add_to_cart" data-product_id="<?php echo esc_attr( $product->get_id() ); ?>" data-product_sku="<?php echo esc_attr( $product->get_sku() ); ?>" aria-label="Thêm vào giỏ">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/></svg>
+                  Thêm vào giỏ
+                </a>
+              </div>
             </div>
 
-            <div style="display:flex;gap:8px;align-items:center;">
-              <?php if ( $product->is_purchasable() && $product->is_in_stock() ) : ?>
-                <a href="<?php echo esc_url( $product->add_to_cart_url() ); ?>" class="btn btn-primary" style="flex:1;text-align:center;">Thêm vào giỏ</a>
-              <?php else : ?>
-                <a href="<?php echo get_permalink( $product_id ); ?>" class="btn btn-outline" style="flex:1;text-align:center;">Xem chi tiết</a>
-              <?php endif; ?>
-
-              <button class="product-wishlist-btn active" data-id="<?php echo esc_attr( $product_id ); ?>" aria-label="Xóa khỏi wishlist" title="Xóa" style="width:48px;height:48px;border-radius:12px;">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 6 4 4 6.5 4c1.74 0 3.41.81 4.5 2.09C12.09 4.81 13.76 4 15.5 4 18 4 20 6 20 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-              </button>
+            <div class="product-card-info">
+              <?php 
+              $brands = wc_get_product_terms( $product->get_id(), 'product_cat', [ 'fields' => 'names' ] );
+              $brand_name = ! empty( $brands ) ? $brands[0] : 'Mô hình';
+              ?>
+              <div class="product-brand"><?php echo esc_html( $brand_name ); ?></div>
+              <a href="<?php echo esc_url( $product->get_permalink() ); ?>" class="product-name"><?php echo esc_html( $product->get_name() ); ?></a>
+              <div class="product-rating">
+                <?php 
+                $rating = $product->get_average_rating();
+                $stars = round( $rating );
+                for ( $s = 1; $s <= 5; $s++ ) {
+                  echo $s <= $stars ? '<span style="color:#f5c518;font-size:13px;">★</span>' : '<span style="color:#ddd;font-size:13px;">★</span>';
+                }
+                ?>
+                <span class="rating-count">(<?php echo $product->get_review_count(); ?>)</span>
+              </div>
+              <div class="product-price">
+                <span class="price-current" style="font-weight:800;color:var(--color-primary);font-size:18px;"><?php echo wc_price( wc_get_price_to_display( $product ) ); ?></span>
+                <?php if ( $product->is_on_sale() && $product->get_regular_price() ): ?>
+                  <span class="price-original" style="text-decoration:line-through;color:#999;font-size:13px;margin-left:6px;"><?php echo wc_price( wc_get_price_to_display( $product, [ 'price' => $product->get_regular_price() ] ) ); ?></span>
+                <?php endif; ?>
+              </div>
             </div>
           </div>
           <?php endforeach; ?>
