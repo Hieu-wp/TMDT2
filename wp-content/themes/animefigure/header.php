@@ -38,10 +38,10 @@
               'theme_location'  => 'primary',
               'container'       => false,
               'menu_class'      => 'navbar-nav',
-              'fallback_cb'     => false,
+              'fallback_cb'     => 'animefigure_primary_menu_fallback',
           ] );
       } else {
-          echo '<ul class="navbar-nav"><li class="nav-item"><a class="nav-link" href="' . admin_url('nav-menus.php') . '">Vui lòng tạo Menu</a></li></ul>';
+          animefigure_primary_menu_fallback();
       }
       ?>
 
@@ -158,10 +158,10 @@
           'theme_location'  => 'primary',
           'container'       => false,
           'menu_class'      => 'mobile-nav-list',
-          'fallback_cb'     => false,
+          'fallback_cb'     => 'animefigure_primary_menu_fallback',
       ] );
   } else {
-      echo '<a class="mobile-nav-link" href="' . admin_url('nav-menus.php') . '">Vui lòng tạo Menu</a>';
+      animefigure_primary_menu_fallback();
   }
   ?>
   <div style="padding:16px 0;">
