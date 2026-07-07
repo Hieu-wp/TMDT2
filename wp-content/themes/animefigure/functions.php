@@ -79,6 +79,7 @@ function animefigure_enqueue_assets() {
         'nonce'     => wp_create_nonce( 'animefigure_nonce' ),
         'siteUrl'   => get_site_url(),
         'currency'  => get_woocommerce_currency_symbol(),
+        'myAccountUrl' => wc_get_page_permalink( 'myaccount' ),
     ] );
 
     if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
@@ -239,17 +240,23 @@ function animefigure_get_bestsellers( $limit = 10 ) {
 function animefigure_toggle_wishlist() {
     check_ajax_referer( 'animefigure_nonce', 'nonce' );
     $product_id = intval( $_POST['product_id'] ?? 0 );
-    $wishlist   = (array) ( get_user_meta( get_current_user_id(), '_wishlist', true ) ?: [] );
+    $user_id = get_current_user_id();
+
+    if ( ! $user_id ) {
+        wp_send_json_error( [ 'message' => 'login_required' ], 401 );
+    }
+
+    $wishlist = (array) ( get_user_meta( $user_id, '_wishlist', true ) ?: [] );
 
     if ( in_array( $product_id, $wishlist ) ) {
-        $wishlist = array_diff( $wishlist, [ $product_id ] );
+        $wishlist = array_values( array_diff( $wishlist, [ $product_id ] ) );
         $action   = 'removed';
     } else {
         $wishlist[] = $product_id;
         $action     = 'added';
     }
 
-    update_user_meta( get_current_user_id(), '_wishlist', $wishlist );
+    update_user_meta( $user_id, '_wishlist', $wishlist );
     wp_send_json_success( [ 'action' => $action, 'count' => count( $wishlist ) ] );
 }
 add_action( 'wp_ajax_animefigure_wishlist', 'animefigure_toggle_wishlist' );
@@ -302,67 +309,103 @@ function animefigure_buy_now_redirect( $url ) {
     return $url;
 }
 
-/* =========================================================
-   MY ACCOUNT PAGE REDESIGN
-   ========================================================= */
+add_filter( 'woocommerce_registration_generate_username', '__return_true' );
+add_filter( 'woocommerce_registration_generate_password', '__return_false' );
+add_filter( 'woocommerce_registration_redirect', 'animefigure_registration_redirect' );
+add_action( 'woocommerce_created_customer', 'animefigure_store_registration_username', 10, 3 );
 
-// 1. Rename and reorder menu items
-add_filter( 'woocommerce_account_menu_items', 'animefigure_custom_my_account_menu_items', 99 );
-function animefigure_custom_my_account_menu_items( $items ) {
-    $new_items = array(
-        'edit-account' => 'Thông tin cá nhân',
-        'orders'       => 'Đơn hàng của tôi',
-        'pre-orders'   => 'Hàng đặt trước',
-        'edit-address' => 'Địa chỉ giao hàng',
-    );
-    return $new_items;
+function animefigure_store_registration_username( $customer_id, $new_customer_data, $password_generated ) {
+    $user = get_userdata( $customer_id );
+    if ( $user ) {
+        $GLOBALS['animefigure_registered_username'] = $user->user_login;
+    }
 }
 
-// 2. Register custom endpoint for pre-orders
-add_action( 'init', 'animefigure_add_pre_orders_endpoint' );
-function animefigure_add_pre_orders_endpoint() {
-    add_rewrite_endpoint( 'pre-orders', EP_ROOT | EP_PAGES );
+function animefigure_registration_redirect( $redirect ) {
+    $user_login = isset( $GLOBALS['animefigure_registered_username'] ) ? $GLOBALS['animefigure_registered_username'] : '';
+    $redirect_url = wc_get_page_permalink( 'myaccount' ) . '?action=login';
+    if ( $user_login ) {
+        $redirect_url = add_query_arg( 'registered_user', urlencode( $user_login ), $redirect_url );
+    }
+    return $redirect_url;
 }
 
-add_filter( 'query_vars', 'animefigure_pre_orders_query_vars', 0 );
-function animefigure_pre_orders_query_vars( $vars ) {
-    $vars[] = 'pre-orders';
-    return $vars;
+add_filter( 'authenticate', 'animefigure_allow_email_login', 20, 3 );
+function animefigure_allow_email_login( $user, $username, $password ) {
+    if ( is_wp_error( $user ) && ! empty( $username ) && is_email( $username ) ) {
+        $user_data = get_user_by( 'email', $username );
+        if ( $user_data ) {
+            $user = wp_authenticate_username_password( null, $user_data->user_login, $password );
+        }
+    }
+    return $user;
 }
 
-// 3. Render content for custom endpoint
-add_action( 'woocommerce_account_pre-orders_endpoint', 'animefigure_pre_orders_content' );
-function animefigure_pre_orders_content() {
-    echo '<p style="color:#666;">Không tìm thấy đơn hàng phù hợp.</p>';
+/**
+ * Make sure an entered password is applied when a customer registers.
+ * This prevents WooCommerce from generating a different temporary password.
+ */
+add_action( 'woocommerce_created_customer', 'animefigure_apply_posted_password_to_customer', 10, 3 );
+function animefigure_apply_posted_password_to_customer( $customer_id, $new_customer_data, $password_generated ) {
+    if ( empty( $_POST['password'] ) ) {
+        return;
+    }
+
+    $nonce = isset( $_POST['woocommerce-register-nonce'] ) ? wp_unslash( $_POST['woocommerce-register-nonce'] ) : '';
+    if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, 'woocommerce-register' ) ) {
+        return;
+    }
+
+    $password = wp_unslash( $_POST['password'] );
+    wp_set_password( $password, intval( $customer_id ) );
 }
 
-// 4. Inject User Profile Box above Navigation
-add_action( 'woocommerce_before_account_navigation', 'animefigure_add_user_profile_box' );
-function animefigure_add_user_profile_box() {
-    $current_user = wp_get_current_user();
-    if ( ! $current_user->exists() ) return;
-    
-    $display_name = $current_user->display_name;
-    $initials = mb_substr( $display_name, 0, 2 );
-    $email = $current_user->user_email;
 
-    echo '<div class="animefigure-myaccount-profile">';
-    echo '  <div class="am-profile-avatar">' . esc_html( strtoupper( $initials ) ) . '</div>';
-    echo '  <div class="am-profile-info">';
-    echo '    <div class="am-profile-name">' . esc_html( $display_name ) . '</div>';
-    echo '    <div class="am-profile-email">' . esc_html( $email ) . '</div>';
-    echo '  </div>';
-    echo '</div>';
+/**
+ * Ensure a Wishlist page exists at /wishlist and uses the `page-wishlist.php` template.
+ * This prevents 404 when header links point to /wishlist.
+ */
+function animefigure_ensure_wishlist_page() {
+    // Only run on init in admin or front, cheap checks
+    $slug = 'wishlist';
+    $page = get_page_by_path( $slug );
+
+    if ( $page ) {
+        // If page exists but doesn't have our template, set it
+        $current_template = get_post_meta( $page->ID, '_wp_page_template', true );
+        if ( 'page-wishlist.php' !== $current_template ) {
+            update_post_meta( $page->ID, '_wp_page_template', 'page-wishlist.php' );
+        }
+        return;
+    }
+
+    // Create the page programmatically
+    $page_id = wp_insert_post( [
+        'post_title'   => 'Wishlist',
+        'post_name'    => $slug,
+        'post_status'  => 'publish',
+        'post_type'    => 'page',
+        'post_content' => '',
+    ] );
+
+    if ( ! is_wp_error( $page_id ) && $page_id ) {
+        update_post_meta( $page_id, '_wp_page_template', 'page-wishlist.php' );
+    }
 }
+add_action( 'init', 'animefigure_ensure_wishlist_page' );
 
-// 5. Inject 'Bổ sung địa chỉ +' button after addresses list
-add_action( 'woocommerce_after_my_account_address', 'animefigure_add_address_button' );
-function animefigure_add_address_button() {
-    echo '<div style="margin-top:30px;">';
-    echo '  <a href="' . esc_url( wc_get_endpoint_url( 'edit-address', 'billing' ) ) . '" class="btn-add-address" style="display:flex;align-items:center;justify-content:center;background:var(--color-primary);color:#fff;padding:15px;border-radius:12px;text-decoration:none;font-weight:600;font-size:1.1rem;transition:0.3s;">';
-    echo '    Bổ sung địa chỉ';
-    echo '    <span style="display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;background:#fff;color:var(--color-primary);border-radius:50%;margin-left:10px;font-size:18px;font-weight:bold;line-height:0;">+</span>';
-    echo '  </a>';
-    echo '</div>';
+/**
+ * Ensure rewrite rule for /wishlist exists so direct URL resolves even if
+ * the Page entry is missing or permalinks behave strangely on local setups.
+ * Flush rewrite rules once after adding the rule to apply it.
+ */
+function animefigure_register_wishlist_rewrite() {
+    add_rewrite_rule( '^wishlist/?$', 'index.php?pagename=wishlist', 'top' );
+
+    // Flush rewrite rules once after registering the rule to avoid 404s on fresh installs.
+    if ( get_option( 'animefigure_wishlist_rewrite_applied' ) !== '1' ) {
+        flush_rewrite_rules( false );
+        update_option( 'animefigure_wishlist_rewrite_applied', '1' );
+    }
 }
-
+add_action( 'init', 'animefigure_register_wishlist_rewrite', 20 );

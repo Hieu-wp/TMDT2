@@ -4917,7 +4917,7 @@ msgstr "sắp khai trương"
 #. translators: %s: site name.
 #: includes/shortcodes/class-wc-shortcode-my-account.php:97
 msgid "Your account with %s is using a temporary password. We emailed you a link to change your password."
-msgstr "Tài khoản của bạn với %s đang sử dụng mật khẩu tạm thời. Chúng tôi đã gửi email cho bạn một liên kết để thay đổi mật khẩu của bạn."
+msgstr ""
 
 #: includes/rest-api/Controllers/Version3/class-wc-rest-product-variations-controller.php:1198
 msgid "Limit result set to virtual product variations."

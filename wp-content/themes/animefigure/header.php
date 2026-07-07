@@ -62,7 +62,14 @@
         <!-- Wishlist -->
         <a class="action-btn" href="<?php echo home_url('/wishlist'); ?>" aria-label="Danh sách yêu thích" title="Wishlist">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
-          <span class="action-badge" id="wishlist-count">0</span>
+          <?php
+            $wishlist_count = 0;
+            if ( is_user_logged_in() ) {
+                $wl = (array) get_user_meta( get_current_user_id(), '_wishlist', true );
+                $wishlist_count = count( $wl );
+            }
+          ?>
+          <span class="action-badge" id="wishlist-count"><?php echo intval( $wishlist_count ); ?></span>
         </a>
 
         <!-- Cart -->
@@ -126,8 +133,8 @@
                 <p style="font-size:12px;color:#666;margin:4px 0 0;line-height:1.4;">Đăng nhập để tích điểm & nhận ưu đãi</p>
               </div>
               <div style="display:flex; flex-direction:column; gap:8px; margin-top:12px;">
-                <a href="<?php echo get_permalink( get_option('woocommerce_myaccount_page_id') ); ?>" class="btn btn-primary btn-sm" style="display:block;text-align:center;color:#fff;">Đăng nhập</a>
-                <a href="<?php echo get_permalink( get_option('woocommerce_myaccount_page_id') ); ?>" class="btn btn-outline btn-sm" style="display:block;text-align:center;box-shadow:none;">Đăng ký ngay</a>
+                <a href="<?php echo get_permalink( get_option('woocommerce_myaccount_page_id') ); ?>" class="btn btn-primary btn-sm" style="display:block;text-align:center;">Đăng nhập</a>
+                <a href="<?php echo esc_url( add_query_arg( 'action', 'register', get_permalink( get_option('woocommerce_myaccount_page_id') ) ) ); ?>" class="btn btn-outline btn-sm" style="display:block;text-align:center;">Đăng ký ngay</a>
               </div>
             <?php endif; ?>
           </div>

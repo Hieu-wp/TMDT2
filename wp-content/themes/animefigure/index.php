@@ -29,7 +29,11 @@ function render_product_card($product, $idx = 0) {
       </div>
 
       <!-- Wishlist -->
-      <button class="product-wishlist-btn" aria-label="Thêm vào wishlist">
+      <?php
+      $current_user_wishlist = (array) get_user_meta( get_current_user_id(), '_wishlist', true );
+      $is_fav = in_array( $product->get_id(), $current_user_wishlist );
+      ?>
+      <button class="product-wishlist-btn<?php echo $is_fav ? ' active' : ''; ?>" data-id="<?php echo esc_attr( $product->get_id() ); ?>" aria-label="Thêm vào wishlist">
         <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
       </button>
 

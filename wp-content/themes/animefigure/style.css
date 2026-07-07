@@ -260,6 +260,19 @@ input, select, textarea {
   border-color: var(--color-white);
 }
 
+.btn-outline {
+  background: transparent;
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.btn-outline:hover {
+  background: var(--color-primary);
+  color: var(--color-white);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(47,128,237,0.25);
+}
+
 .btn-accent {
   background: var(--color-accent);
   color: var(--color-white);
@@ -839,7 +852,7 @@ body.admin-bar .navbar {
 /* Dropdown for WordPress Sub-menu */
 .navbar-nav .sub-menu {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 12px);
   left: 0;
   min-width: 220px;
   background: var(--color-white);
@@ -909,7 +922,7 @@ body.admin-bar .navbar {
 /* User Dropdown */
 .user-dropdown {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 12px);
   right: 0;
   min-width: 240px;
   background: var(--color-white);
@@ -923,6 +936,17 @@ body.admin-bar .navbar {
   transition: all var(--transition-base);
   pointer-events: none;
   z-index: 100;
+}
+
+/* Invisible bridge to prevent hover loss when moving mouse from icon to dropdown */
+.user-dropdown::after {
+  content: '';
+  position: absolute;
+  top: -15px;
+  left: 0;
+  width: 100%;
+  height: 15px;
+  background: transparent;
 }
 
 .action-btn:hover .user-dropdown {
@@ -956,7 +980,7 @@ body.admin-bar .navbar {
   font-weight: 500;
 }
 
-.user-dropdown a:hover {
+.user-dropdown a:not(.btn):hover {
   background: var(--color-bg-soft);
   color: var(--color-primary);
 }
@@ -2216,7 +2240,7 @@ body.admin-bar .navbar {
    ========================================================= */
 .cart-dropdown {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 12px);
   right: 0;
   width: 320px;
   background: var(--color-white);
@@ -2230,6 +2254,17 @@ body.admin-bar .navbar {
   transition: all var(--transition-base);
   pointer-events: none;
   z-index: 10;
+}
+
+/* Invisible bridge to prevent hover loss when moving mouse from icon to dropdown */
+.cart-dropdown::after {
+  content: '';
+  position: absolute;
+  top: -15px;
+  left: 0;
+  width: 100%;
+  height: 15px;
+  background: transparent;
 }
 
 .action-btn:hover .cart-dropdown {
@@ -2650,525 +2685,706 @@ body.admin-bar .navbar {
 .woocommerce div.product #reviews .form-submit .submit:hover {
   background: var(--color-primary-dark);
   transform: translateY(-2px);
-  box-shadow: 0 4px 14px rgba(242,140,140,0.4);
-}
-/* Fix stars in review form */
-.woocommerce p.stars a {
-  color: var(--color-primary);
-}
-.woocommerce .star-rating {
-  color: #f5c518;
-}
-/* Character List Page Styles */
-.char-page-container {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 2rem 2rem 5rem;
-    background: #f8f9fa;
-    min-height: 100vh;
-}
-.char-breadcrumb {
-    font-size: 0.9rem;
-    color: #666;
-    margin-bottom: 2rem;
-}
-.char-breadcrumb a {
-    color: #333;
-    text-decoration: none;
-}
-.char-search-wrapper {
-    margin-bottom: 1.5rem;
-}
-.char-search-wrapper input {
-    width: 100%;
-    padding: 1rem 1.5rem;
-    font-size: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    outline: none;
-    transition: box-shadow 0.2s;
-    border-left: 4px solid #777;
-}
-.char-search-wrapper input:focus {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-.char-alphabet-filter {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 2rem;
-}
-.char-letter-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    background: #fff;
-    border: 1px solid #eaeaea;
-    border-radius: 8px;
-    color: #555;
-    font-weight: 600;
-    text-decoration: none;
-    transition: all 0.2s;
-}
-.char-letter-btn:hover {
-    background: #f0f0f0;
-    color: #333;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-}
-.char-stats-summary {
-    background: #fff5f5;
-    color: #555;
-    padding: 1rem;
-    border-radius: 8px;
-    border: 1px solid #ffebeb;
-    margin-bottom: 3rem;
-}
-.char-group {
-    margin-bottom: 4rem;
-}
-.char-group-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 1.5rem;
-    color: #333;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-.char-group-title::before {
-    content: '';
-    display: block;
-    width: 4px;
-    height: 24px;
-    background: #F28C8C;
-}
-.char-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.5rem;
-}
-.char-card {
-    background: #fff;
-    border-radius: 12px;
-    padding: 1.5rem;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.04);
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    transition: transform 0.2s, box-shadow 0.2s;
-    border: 1px solid #f0f0f0;
-}
-.char-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-}
-.char-card-top {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-.char-avatar {
-    width: 60px;
-    height: 60px;
-    border-radius: 12px;
-    overflow: hidden;
-    background: #e9ecef;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-.char-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-.char-avatar-initial {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #495057;
-}
-.char-info {
-    flex: 1;
-}
-.char-name {
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin: 0 0 4px 0;
-    color: #222;
-}
-.char-series {
-    font-size: 0.85rem;
-    color: #6c757d;
-    margin: 0;
-}
-.char-score {
-    background: #f1f3f5;
-    color: #495057;
-    font-size: 0.8rem;
-    font-weight: 700;
-    padding: 4px 8px;
-    border-radius: 6px;
-    align-self: flex-start;
-}
-.char-card-middle {
-    margin-top: 0.5rem;
-}
-.char-badge {
-    background: #e7f1ff;
-    color: #6b8dbb;
-    font-size: 0.7rem;
-    font-weight: 700;
-    padding: 4px 10px;
-    border-radius: 20px;
-    text-transform: uppercase;
-    display: inline-block;
-}
-.char-card-bottom {
-    margin-top: auto;
-    padding-top: 1rem;
-    border-top: 1px dashed #eaeaea;
-  background: var(--color-primary);
-  color: var(--color-white);
-  border-radius: var(--radius-full);
-  padding: 12px 32px;
-  border: none;
-  font-weight: 700;
-  font-size: var(--font-size-base);
-  cursor: pointer;
-  transition: all var(--transition-base);
-}
-.woocommerce div.product #reviews .form-submit .submit:hover {
-  background: var(--color-primary-dark);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 14px rgba(242,140,140,0.4);
-}
-/* Fix stars in review form */
-.woocommerce p.stars a {
-  color: var(--color-primary);
-}
-.woocommerce .star-rating {
-  color: #f5c518;
-}
-/* Character List Page Styles */
-.char-page-container {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 2rem 2rem 5rem;
-    background: #f8f9fa;
-    min-height: 100vh;
-}
-.char-breadcrumb {
-    font-size: 0.9rem;
-    color: #666;
-    margin-bottom: 2rem;
-}
-.char-breadcrumb a {
-    color: #333;
-    text-decoration: none;
-}
-.char-search-wrapper {
-    margin-bottom: 1.5rem;
-}
-.char-search-wrapper input {
-    width: 100%;
-    padding: 1rem 1.5rem;
-    font-size: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    outline: none;
-    transition: box-shadow 0.2s;
-    border-left: 4px solid #777;
-}
-.char-search-wrapper input:focus {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-.char-alphabet-filter {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 2rem;
-}
-.char-letter-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    background: #fff;
-    border: 1px solid #eaeaea;
-    border-radius: 8px;
-    color: #555;
-    font-weight: 600;
-    text-decoration: none;
-    transition: all 0.2s;
-}
-.char-letter-btn:hover {
-    background: #f0f0f0;
-    color: #333;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-}
-.char-stats-summary {
-    background: #fff5f5;
-    color: #555;
-    padding: 1rem;
-    border-radius: 8px;
-    border: 1px solid #ffebeb;
-    margin-bottom: 3rem;
-}
-.char-group {
-    margin-bottom: 4rem;
-}
-.char-group-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 1.5rem;
-    color: #333;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-.char-group-title::before {
-    content: '';
-    display: block;
-    width: 4px;
-    height: 24px;
-    background: #F28C8C;
-}
-.char-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.5rem;
-}
-.char-card {
-    background: #fff;
-    border-radius: 12px;
-    padding: 1.5rem;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.04);
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    transition: transform 0.2s, box-shadow 0.2s;
-    border: 1px solid #f0f0f0;
-}
-.char-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-}
-.char-card-top {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-.char-avatar {
-    width: 60px;
-    height: 60px;
-    border-radius: 12px;
-    overflow: hidden;
-    background: #e9ecef;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-.char-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-.char-avatar-initial {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #495057;
-}
-.char-info {
-    flex: 1;
-}
-.char-name {
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin: 0 0 4px 0;
-    color: #222;
-}
-.char-series {
-    font-size: 0.85rem;
-    color: #6c757d;
-    margin: 0;
-}
-.char-score {
-    background: #f1f3f5;
-    color: #495057;
-    font-size: 0.8rem;
-    font-weight: 700;
-    padding: 4px 8px;
-    border-radius: 6px;
-    align-self: flex-start;
-}
-.char-card-middle {
-    margin-top: 0.5rem;
-}
-.char-badge {
-    background: #e7f1ff;
-    color: #6b8dbb;
-    font-size: 0.7rem;
-    font-weight: 700;
-    padding: 4px 10px;
-    border-radius: 20px;
-    text-transform: uppercase;
-    display: inline-block;
-}
-.char-card-bottom {
-    margin-top: auto;
-    padding-top: 1rem;
-    border-top: 1px dashed #eaeaea;
-}
-.char-card-bottom.empty-alias {
-    border-top: none;
-    padding-top: 0;
-}
-.char-alias-badge {
-    color: #888;
-    font-size: 0.8rem;
+  box-shadow: 0 8px 24px rgba(47,128,237,0.4);
 }
 
 /* =========================================================
-   WOOCOMMERCE CHECKOUT STYLES
+   CUSTOM AF LOGIN / REGISTER (SPLIT SCREEN)
    ========================================================= */
-/* Info and Message boxes */
-.woocommerce-info, .woocommerce-message {
-    border-top-color: var(--color-primary) !important;
-    background-color: var(--color-bg-soft) !important;
-}
-.woocommerce-info::before, .woocommerce-message::before {
-    color: var(--color-primary) !important;
-}
-.woocommerce-error {
-    border-top-color: var(--color-primary-dark) !important;
-}
-.woocommerce-error::before {
-    color: var(--color-primary-dark) !important;
-}
-.woocommerce-info a, .woocommerce-message a, .woocommerce-error a {
-    color: var(--color-primary);
-}
-.woocommerce-info a:hover, .woocommerce-message a:hover, .woocommerce-error a:hover {
-    color: var(--color-primary-dark);
+.af-login-wrapper {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  width: min(1360px, calc(100% - 40px));
+  max-width: 100%;
+  margin: 24px auto 36px;
+  background: #fbfbfd;
+  border-radius: 34px;
+  overflow: hidden;
+  box-shadow: 0 30px 70px rgba(15, 23, 42, 0.12);
 }
 
-/* Form inputs focus state */
-.woocommerce form .form-row input.input-text:focus,
-.woocommerce form .form-row textarea:focus,
-.woocommerce form .form-row select:focus {
-    border-color: var(--color-primary) !important;
-    outline: none;
-    box-shadow: 0 0 0 2px var(--color-primary-light) !important;
+.af-login-image {
+  flex: 1 1 420px;
+  min-width: 360px;
+  max-width: 620px;
+  order: 1;
+  min-height: 560px;
+  background-image: url('assets/images/login-banner.png');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  padding: 44px;
+  color: var(--color-white);
 }
 
-/* Buttons */
-.woocommerce form.checkout_coupon .button,
-.woocommerce #respond input#submit, 
-.woocommerce a.button, 
-.woocommerce button.button, 
-.woocommerce input.button {
-    background-color: var(--color-primary);
-    color: #fff;
-    border: none;
-    transition: background-color 0.3s;
-}
-.woocommerce form.checkout_coupon .button:hover,
-.woocommerce #respond input#submit:hover, 
-.woocommerce a.button:hover, 
-.woocommerce button.button:hover, 
-.woocommerce input.button:hover {
-    background-color: var(--color-primary-dark);
-    color: #fff;
+.af-login-image::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(to top, rgba(15,23,42,0.75) 0%, rgba(15,23,42,0) 55%);
 }
 
-/* Order Table */
-.woocommerce table.shop_table {
-    border-color: var(--color-border);
-    border-radius: 8px;
-    overflow: hidden;
-}
-.woocommerce table.shop_table th {
-    background-color: var(--color-bg-soft);
-    color: var(--color-text);
+.af-login-quote {
+  position: relative;
+  z-index: 1;
 }
 
-/* Payment Box */
-.woocommerce-checkout #payment {
-    background: var(--color-bg-soft) !important;
-    border-radius: 8px;
-    padding: 20px;
-}
-.woocommerce-checkout #payment ul.payment_methods {
-    border-bottom-color: var(--color-border) !important;
-}
-.woocommerce-checkout #payment div.payment_box {
-    background-color: #fff !important;
-    color: var(--color-text-muted) !important;
-}
-.woocommerce-checkout #payment div.payment_box::before {
-    border-bottom-color: #fff !important;
+.af-login-quote h3 {
+  color: var(--color-white);
+  font-size: 2.2rem;
+  margin-bottom: 12px;
+  max-width: 320px;
 }
 
-/* Place Order Button */
-.woocommerce #payment #place_order {
-    background-color: var(--color-primary) !important;
-    color: #fff !important;
-    font-weight: 600;
-    font-size: 1.1rem;
-    padding: 15px 30px;
-    border-radius: 8px;
-    transition: all 0.3s ease;
+.af-login-quote p {
+  font-size: 1rem;
+  opacity: 0.95;
+  max-width: 310px;
+}
+
+.af-login-content {
+  flex: 0 0 440px;
+  min-width: 320px;
+  order: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 28px 28px 32px;
+  background: rgba(255,255,255,0.95);
+  border-radius: 0 34px 34px 0;
+}
+
+.af-login-box {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.af-custom-form {
+  width: 100%;
+  padding: 30px 28px 26px;
+  background: #ffffff;
+  border: 1px solid rgba(31, 41, 55, 0.08);
+  border-radius: 30px;
+  box-shadow: 0 28px 60px rgba(15, 23, 42, 0.08);
+}
+
+.af-login-tabs {
+  display: flex;
+  gap: 18px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid rgba(226, 232, 240, 1);
+}
+
+.af-tab-btn {
+  background: none;
+  border: none;
+  padding: 10px 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  position: relative;
+  transition: color var(--transition-fast);
+}
+
+.af-tab-btn.active {
+  color: var(--color-primary);
+}
+
+.af-tab-btn::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--color-primary);
+  transform: scaleX(0);
+  transition: transform var(--transition-base);
+  transform-origin: left;
+}
+
+.af-tab-btn.active::after {
+  transform: scaleX(1);
+}
+
+.af-form-pane {
+  display: none;
+  animation: afFadeIn 0.4s ease forwards;
+}
+
+.af-form-pane.active {
+  display: block;
+}
+
+@keyframes afFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Autofill animation hook (some browsers) */
+@keyframes onAutoFillStart { from {} to {} }
+
+.af-login-title {
+  font-size: 1.75rem;
+  margin-bottom: 30px;
+  color: var(--color-text);
+}
+
+.af-registered-notice {
+  background: rgba(255, 245, 235, 0.95);
+  border: 1px solid rgba(248, 169, 89, 0.35);
+  padding: 18px 22px;
+  border-radius: 18px;
+  margin-bottom: 22px;
+  color: #8a4a10;
+}
+
+.af-registered-notice p {
+  margin-bottom: 8px;
+}
+
+.af-registered-notice strong {
+  color: #c94a1c;
+}
+
+.af-forgot-wrapper .af-login-image {
+  flex: 1 1 420px;
+  min-width: 360px;
+  max-width: 620px;
+  min-height: 560px;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  padding: 44px;
+  color: var(--color-white);
+  background-image: url('assets/images/login-banner.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.af-forgot-wrapper .af-login-image::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(to top, rgba(15, 23, 42, 0.75) 0%, rgba(15, 23, 42, 0) 55%);
+}
+
+.af-forgot-wrapper .af-login-quote h3 {
+  color: var(--color-primary);
+  font-size: 2rem;
+}
+
+.af-forgot-wrapper .af-login-quote p {
+  color: var(--color-secondary);
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+.af-forgot-wrapper .af-login-tabs {
+  justify-content: center;
+}
+
+.af-forgot-wrapper .af-login-tabs .af-tab-btn {
+  width: 100%;
+  max-width: 320px;
+  border-radius: 999px;
+  padding: 12px 0;
+  background: rgba(244, 114, 182, 0.1);
+  color: var(--color-primary);
+}
+
+.af-forgot-wrapper .af-form-pane {
+  padding-top: 10px;
+}
+
+.af-forgot-footer {
+  margin-top: 18px;
+  text-align: center;
+}
+
+.af-forgot-footer a {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+/* Inputs */
+.af-input-group {
+  position: relative;
+  margin-bottom: 18px;
+}
+
+.af-input-group label {
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  transform: translateY(-50%);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-base);
+  pointer-events: none;
+  transition: all 0.2s ease;
+  background: #ffffff;
+  padding: 0 6px;
+}
+
+.af-input {
+  width: 100%;
+  height: 54px;
+  border: 1.8px solid rgba(31, 41, 55, 0.12);
+  border-radius: 20px;
+  padding: 0 20px;
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  background: #f9fafb;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.af-login-title {
+  font-size: 1.75rem;
+  margin-bottom: 20px;
+  color: var(--color-text);
+  font-weight: 700;
+}
+
+.af-password-hint {
+  color: #6b7280;
+  margin-bottom: 24px;
+}
+
+.af-input:focus,
+.af-input.has-val {
+  border-color: var(--color-primary);
+  outline: none;
+}
+
+/* Toggle show/hide password button */
+.af-toggle-pass {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  font-size: 18px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 6px;
+}
+.af-toggle-pass:focus { outline: none; }
+
+.af-input.has-val ~ label,
+.af-input:focus ~ label,
+.af-input:not(:placeholder-shown) ~ label,
+.af-input:-webkit-autofill ~ label {
+  /* Hide the floating label when the field contains a value, is focused, or autofilled */
+  display: none !important;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+}
+
+/* JS-driven label hide class (more robust when extra elements are between input and label) */
+.af-label-hidden {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+.af-form-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  font-size: var(--font-size-sm);
+}
+
+.af-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.af-submit-btn {
+  width: 100%;
+  height: 54px;
+  font-size: 1rem;
+  border-radius: 999px;
+  box-shadow: 0 14px 30px rgba(239, 86, 116, 0.18);
+}
+
+.af-password-hint {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  margin-bottom: 24px;
+}
+
+@media (max-width: 991px) {
+  .af-login-wrapper {
+    flex-direction: column;
+  }
+  .af-login-image {
+    order: 1;
+    min-height: 260px;
+    flex: none;
+    padding: 40px 24px;
+  }
+  .af-login-content {
+    order: 2;
+    flex: none;
     width: 100%;
+    padding: 30px 20px 40px;
+  }
+
+  .af-login-box {
+    max-width: 100%;
+  }
+
+  .af-login-tabs {
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+}
+
+/* Fix stars in review form */
+.woocommerce p.stars a {
+  color: var(--color-primary);
+}
+.woocommerce .star-rating {
+  color: #f5c518;
+}
+/* =========================================================
+   MY ACCOUNT REDESIGN (FIXED)
+   ========================================================= */
+
+/* 1. Main Layout */
+.woocommerce-account .woocommerce {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    grid-template-rows: auto 1fr;
+    gap: 0 30px;
+    align-items: flex-start;
     margin-top: 20px;
-}
-.woocommerce #payment #place_order:hover {
-    background-color: var(--color-primary-dark) !important;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(242, 140, 140, 0.4);
+    padding-bottom: 50px;
 }
 
-/* Always show coupon form */
-.woocommerce-checkout .checkout_coupon {
-    display: block !important;
-}
-.woocommerce-form-coupon-toggle {
-    display: none !important;
+/* Fix: Ép phần thông báo của Woo chiếm 100% chiều rộng để không bị dồn vào cột */
+.woocommerce-account .woocommerce > .woocommerce-notices-wrapper {
+    grid-column: 1 / -1;
+    width: 100%;
 }
 
-/* Stack checkout columns vertically and center */
-.woocommerce-checkout #customer_details.col2-set {
+@media (max-width: 768px) {
+    .woocommerce-account .woocommerce {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+}
+
+/* 2. Sidebar & Navigation */
+.woocommerce-MyAccount-navigation {
+    grid-column: 1;
+    grid-row: 3;
+    width: 100%;
+    flex-shrink: 0;
+    background: #fff;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 10px 15px rgba(0,0,0,0.05);
+    padding: 0 0 20px 0;
+}
+@media (max-width: 768px) {
+    .woocommerce-MyAccount-navigation {
+        width: 100%;
+        border-radius: 12px;
+    }
+}
+
+/* 3. User Profile Box */
+.animefigure-myaccount-profile {
+    grid-column: 1;
+    grid-row: 2;
+    background: #fff;
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px 20px 0 20px;
+    margin-bottom: 0;
+    border-bottom: none;
+    position: relative;
+    z-index: 2;
+}
+.animefigure-myaccount-profile::after {
+    content: '';
+    display: block;
+    width: calc(100% - 40px);
+    height: 1px;
+    background: #ececec;
+    position: absolute;
+    bottom: -10px;
+    left: 20px;
+}
+
+.am-profile-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #f1c40f; 
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+.am-profile-info {
     display: flex;
     flex-direction: column;
+    overflow: hidden;
+}
+.am-profile-name {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #333;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.am-profile-email {
+    font-size: 0.85rem;
+    color: #888;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+/* 4. Menu Items */
+.woocommerce-MyAccount-navigation ul {
+    list-style: none;
+    margin: 0;
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.woocommerce-MyAccount-navigation ul li {
+    margin: 0;
+    padding: 0;
+}
+.woocommerce-MyAccount-navigation ul li a {
+    display: flex;
     align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    background-color: #f1f3f5;
+    color: #495057;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+.woocommerce-MyAccount-navigation ul li.is-active a,
+.woocommerce-MyAccount-navigation ul li a:hover {
+    background-color: var(--color-primary, #007bff); /* Thêm fallback color nếu biến CSS chưa chạy */
+    color: #fff;
+}
+
+/* 5. Content Area */
+.woocommerce-MyAccount-content {
+    grid-column: 2;
+    grid-row: 2 / span 2;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    padding: 30px;
+}
+.woocommerce-MyAccount-content h3,
+.woocommerce-MyAccount-content legend {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 25px;
+    color: #333;
+    border: none;
+}
+.woocommerce-MyAccount-content form .form-row {
+    margin-bottom: 20px;
+}
+.woocommerce-MyAccount-content form .form-row label {
+    font-weight: 500;
+    color: #495057;
+    margin-bottom: 8px;
+    display: block;
+}
+.woocommerce-MyAccount-content form .form-row input.input-text,
+.woocommerce-MyAccount-content form .form-row select,
+.woocommerce-MyAccount-content form .form-row textarea {
+    width: 100%;
+    padding: 12px 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 25px;
+    background-color: #fff;
+    transition: all 0.3s;
+    font-size: 0.95rem;
+    box-sizing: border-box; /* Fix: Đảm bảo padding không làm phình to thẻ input */
+}
+.woocommerce-MyAccount-content form .form-row input.input-text:focus,
+.woocommerce-MyAccount-content form .form-row select:focus,
+.woocommerce-MyAccount-content form .form-row textarea:focus {
+    border-color: var(--color-primary, #007bff);
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+    outline: none;
+}
+.woocommerce-MyAccount-content fieldset {
+    border: 1px solid #ececec;
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.woocommerce-MyAccount-content button[type="submit"] {
+    background-color: var(--color-primary, #007bff);
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    padding: 12px 40px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 15px;
+    text-transform: uppercase;
+}
+.woocommerce-MyAccount-content button[type="submit"]:hover {
+    filter: brightness(0.9); /* Dùng filter để hover tối màu đi một chút thay vì biến dark */
+}
+
+/* =========================================================
+   6. Form Layout Fix (THAY THẾ LỖI GRID CŨ)
+   ========================================================= */
+/* Clearfix cho form để không bị lỗi float */
+.woocommerce-MyAccount-content form::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* Chia đôi 2 cột cho Tên và Họ an toàn hơn thay vì dùng Grid */
+.woocommerce-MyAccount-content form .form-row-first {
+    float: left;
+    width: 48%;
+}
+.woocommerce-MyAccount-content form .form-row-last {
+    float: right;
+    width: 48%;
+}
+.woocommerce-MyAccount-content form .form-row-wide {
+    clear: both;
+    width: 100%;
+}
+
+/* Responsive cho Form khi ở màn hình điện thoại */
+@media (max-width: 768px) {
+    .woocommerce-MyAccount-content form .form-row-first,
+    .woocommerce-MyAccount-content form .form-row-last {
+        float: none;
+        width: 100%;
+    }
+}
+
+/* =========================================================
+   7. ADDRESS SECTION REDESIGN
+   ========================================================= */
+/* Address List Header & Cards */
+.woocommerce-MyAccount-content header.title h3 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+.woocommerce-Address {
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 30px;
+    position: relative;
+    background: #fff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+}
+.woocommerce-Address address {
+    font-style: normal;
+    color: #333;
+    line-height: 1.8;
+}
+.woocommerce-Address .edit {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: #f1f3f5;
+    color: #333;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0; /* hide text */
+}
+.woocommerce-Address .edit::before {
+    content: "✎";
+    font-size: 16px;
+}
+
+/* Edit Address Form Flex Layout */
+.woocommerce-address-fields .form-row,
+.woocommerce-address-fields .form-row-first,
+.woocommerce-address-fields .form-row-last,
+.woocommerce-address-fields .form-row-wide {
+    display: flex !important;
+    align-items: center;
+    gap: 20px;
+    width: 100% !important;
+    float: none !important;
+    clear: both !important;
+    margin-bottom: 20px;
+}
+.woocommerce-address-fields .form-row label {
+    flex: 0 0 30%;
+    margin: 0 !important;
+    font-weight: 500;
+    color: #333;
+}
+.woocommerce-address-fields .form-row .woocommerce-input-wrapper {
+    flex: 1;
+}
+.woocommerce-address-fields .form-row input.input-text,
+.woocommerce-address-fields .form-row select,
+.woocommerce-address-fields .form-row textarea {
     width: 100%;
     margin: 0;
 }
-.woocommerce-checkout #customer_details.col2-set .col-1,
-.woocommerce-checkout #customer_details.col2-set .col-2 {
-    width: 100%;
-    max-width: 800px;
-    float: none;
-    margin-bottom: 2rem;
-    padding: 0;
+
+/* Fix for Select2 (country/state dropdowns) */
+.woocommerce-address-fields .select2-container {
+    width: 100% !important;
 }
 
-/* Center the order review section to match */
-.woocommerce-checkout h3#order_review_heading,
-.woocommerce-checkout #order_review,
-.woocommerce-checkout .woocommerce-checkout-review-order {
-    max-width: 800px;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    width: 100%;
+/* Mobile fallback */
+@media (max-width: 768px) {
+    .woocommerce-address-fields .form-row {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 5px;
+    }
+    .woocommerce-address-fields .form-row label {
+        flex: auto;
+    }
 }
 /* =========================================================
    MY ACCOUNT REDESIGN (FIXED)

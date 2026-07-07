@@ -129,6 +129,37 @@
         action: 'animefigure_wishlist',
         nonce:  animeStore.nonce,
         product_id: productId
+      }).done(function(response){
+        if (!response || !response.success) {
+          // If server requires login, revert UI and redirect to login page
+          if (response && response.data && response.data.message === 'login_required') {
+            // revert
+            wishlistBtn.classList.toggle('active');
+            const countEl2 = document.getElementById('wishlist-count');
+            if (countEl2) {
+              let current = parseInt(countEl2.textContent) || 0;
+              countEl2.textContent = Math.max(0, current - (isActive ? 1 : -1));
+            }
+            // redirect to myaccount (login)
+            if (animeStore && animeStore.myAccountUrl) {
+              window.location.href = animeStore.myAccountUrl;
+            } else {
+              window.location.href = animeStore.siteUrl;
+            }
+          } else {
+            // generic error: revert visual change
+            wishlistBtn.classList.toggle('active');
+          }
+        } else {
+          // ensure count matches server
+          const countEl3 = document.getElementById('wishlist-count');
+          if (countEl3 && response.data && typeof response.data.count !== 'undefined') {
+            countEl3.textContent = response.data.count;
+          }
+        }
+      }).fail(function(){
+        // network error, revert
+        wishlistBtn.classList.toggle('active');
       });
     }
   });
@@ -136,6 +167,9 @@
   /* =========================================================
      ADD TO CART ANIMATION
      ========================================================= */
+  
+  
+
   document.addEventListener('click', function (e) {
     const cartBtn = e.target.closest('.btn-addtocart');
     if (!cartBtn) return;
