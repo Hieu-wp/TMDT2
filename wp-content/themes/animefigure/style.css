@@ -2852,6 +2852,66 @@ body.admin-bar .navbar {
   color: #c94a1c;
 }
 
+.af-forgot-wrapper .af-login-image {
+  flex: 1 1 420px;
+  min-width: 360px;
+  max-width: 620px;
+  min-height: 560px;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  padding: 44px;
+  color: var(--color-white);
+  background-image: url('assets/images/login-banner.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.af-forgot-wrapper .af-login-image::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(to top, rgba(15, 23, 42, 0.75) 0%, rgba(15, 23, 42, 0) 55%);
+}
+
+.af-forgot-wrapper .af-login-quote h3 {
+  color: var(--color-primary);
+  font-size: 2rem;
+}
+
+.af-forgot-wrapper .af-login-quote p {
+  color: var(--color-secondary);
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+.af-forgot-wrapper .af-login-tabs {
+  justify-content: center;
+}
+
+.af-forgot-wrapper .af-login-tabs .af-tab-btn {
+  width: 100%;
+  max-width: 320px;
+  border-radius: 999px;
+  padding: 12px 0;
+  background: rgba(244, 114, 182, 0.1);
+  color: var(--color-primary);
+}
+
+.af-forgot-wrapper .af-form-pane {
+  padding-top: 10px;
+}
+
+.af-forgot-footer {
+  margin-top: 18px;
+  text-align: center;
+}
+
+.af-forgot-footer a {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
 /* Inputs */
 .af-input-group {
   position: relative;
@@ -2881,6 +2941,18 @@ body.admin-bar .navbar {
   color: var(--color-text);
   background: #f9fafb;
   transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.af-login-title {
+  font-size: 1.75rem;
+  margin-bottom: 20px;
+  color: var(--color-text);
+  font-weight: 700;
+}
+
+.af-password-hint {
+  color: #6b7280;
+  margin-bottom: 24px;
 }
 
 .af-input:focus,
