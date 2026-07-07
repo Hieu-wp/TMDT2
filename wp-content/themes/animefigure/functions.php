@@ -299,3 +299,167 @@ function animefigure_buy_now_redirect( $url ) {
     }
     return $url;
 }
+
+/* =========================================================
+   PRIMARY MENU FALLBACK & AUTO CATEGORY DROPDOWN
+   ========================================================= */
+
+/**
+ * Fallback menu when no Primary Menu is assigned in WP Admin
+ */
+function animefigure_primary_menu_fallback() {
+    echo '<ul class="navbar-nav">';
+    echo '<li class="menu-item"><a href="' . esc_url( home_url( '/' ) ) . '">Trang chủ</a></li>';
+    
+    $shop_url = function_exists( 'wc_get_page_id' ) && wc_get_page_id( 'shop' ) > 0 ? get_permalink( wc_get_page_id( 'shop' ) ) : home_url( '/shop' );
+    echo '<li class="menu-item"><a href="' . esc_url( $shop_url ) . '">Cửa hàng</a></li>';
+    
+    echo '<li class="menu-item menu-item-has-children">';
+    echo '<a href="' . esc_url( $shop_url ) . '">Danh mục</a>';
+    echo '<ul class="sub-menu">';
+    
+    $product_categories = get_terms( [
+        'taxonomy'   => 'product_cat',
+        'hide_empty' => false,
+    ] );
+    
+    if ( ! empty( $product_categories ) && ! is_wp_error( $product_categories ) ) {
+        foreach ( $product_categories as $cat ) {
+            if ( $cat->slug === 'uncategorized' || $cat->name === 'Chưa phân loại' ) {
+                continue;
+            }
+            echo '<li class="menu-item"><a href="' . esc_url( get_term_link( $cat ) ) . '">' . esc_html( $cat->name ) . '</a></li>';
+        }
+    }
+    echo '</ul>';
+    echo '</li>';
+
+    if ( $about_page = get_page_by_title( 'Giới thiệu' ) ) {
+        echo '<li class="menu-item"><a href="' . esc_url( get_permalink( $about_page ) ) . '">Giới thiệu</a></li>';
+    }
+    if ( $shipping_page = get_page_by_title( 'Chính sách vận chuyển' ) ) {
+        echo '<li class="menu-item"><a href="' . esc_url( get_permalink( $shipping_page ) ) . '">Chính sách vận chuyển</a></li>';
+    }
+    echo '</ul>';
+}
+
+/**
+ * Automatically inject "Danh mục" dropdown with product categories into WP Nav Menu if needed
+ */
+add_filter( 'wp_nav_menu_objects', 'animefigure_auto_category_dropdown', 10, 2 );
+function animefigure_auto_category_dropdown( $sorted_menu_items, $args ) {
+    if ( ! isset( $args->theme_location ) || $args->theme_location !== 'primary' ) {
+        return $sorted_menu_items;
+    }
+
+    $found_danh_muc = false;
+    $danh_muc_id    = 0;
+
+    foreach ( $sorted_menu_items as $item ) {
+        if ( stripos( $item->title, 'Danh mục' ) !== false || stripos( $item->title, 'Sản phẩm' ) !== false || stripos( $item->title, 'Mô hình' ) !== false ) {
+            $found_danh_muc  = true;
+            $danh_muc_id     = $item->ID;
+            if ( ! in_array( 'menu-item-has-children', (array) $item->classes ) ) {
+                $item->classes[] = 'menu-item-has-children';
+            }
+            break;
+        }
+    }
+
+    // If no "Danh mục" item exists in the primary menu, inject one after position 1
+    if ( ! $found_danh_muc ) {
+        $danh_muc_id   = -9999;
+        $shop_url      = function_exists( 'wc_get_page_id' ) && wc_get_page_id( 'shop' ) > 0 ? get_permalink( wc_get_page_id( 'shop' ) ) : '#';
+        $danh_muc_item = (object) [
+            'ID'                    => $danh_muc_id,
+            'db_id'                 => $danh_muc_id,
+            'menu_item_parent'      => 0,
+            'object_id'             => $danh_muc_id,
+            'post_parent'           => 0,
+            'type'                  => 'custom',
+            'object'                => 'custom',
+            'type_label'            => 'Custom Link',
+            'title'                 => 'Danh mục',
+            'url'                   => $shop_url,
+            'target'                => '',
+            'attr_title'            => '',
+            'description'           => '',
+            'classes'               => [ 'menu-item', 'menu-item-has-children' ],
+            'xfn'                   => '',
+            'status'                => 'publish',
+            'current'               => false,
+            'current_item_ancestor' => false,
+            'current_item_parent'   => false,
+        ];
+
+        $new_items = [];
+        $inserted  = false;
+        $pos       = 0;
+        foreach ( $sorted_menu_items as $item ) {
+            $new_items[] = $item;
+            if ( $item->menu_item_parent == 0 ) {
+                $pos++;
+            }
+            if ( $pos === 2 && ! $inserted && $item->menu_item_parent == 0 ) {
+                $new_items[] = $danh_muc_item;
+                $inserted    = true;
+            }
+        }
+        if ( ! $inserted ) {
+            $new_items[] = $danh_muc_item;
+        }
+        $sorted_menu_items = $new_items;
+    }
+
+    // Check if $danh_muc_id already has children in the menu
+    $has_existing_children = false;
+    foreach ( $sorted_menu_items as $item ) {
+        if ( $item->menu_item_parent == $danh_muc_id ) {
+            $has_existing_children = true;
+            break;
+        }
+    }
+
+    // If it doesn't have children yet, automatically attach all WooCommerce product categories!
+    if ( ! $has_existing_children ) {
+        $product_categories = get_terms( [
+            'taxonomy'   => 'product_cat',
+            'hide_empty' => false,
+        ] );
+
+        if ( ! empty( $product_categories ) && ! is_wp_error( $product_categories ) ) {
+            $cat_id_counter = -10000;
+            foreach ( $product_categories as $cat ) {
+                if ( $cat->slug === 'uncategorized' || $cat->name === 'Chưa phân loại' ) {
+                    continue;
+                }
+
+                $cat_item = (object) [
+                    'ID'                    => $cat_id_counter,
+                    'db_id'                 => $cat_id_counter,
+                    'menu_item_parent'      => $danh_muc_id,
+                    'object_id'             => $cat->term_id,
+                    'post_parent'           => 0,
+                    'type'                  => 'taxonomy',
+                    'object'                => 'product_cat',
+                    'type_label'            => 'Category',
+                    'title'                 => $cat->name,
+                    'url'                   => get_term_link( $cat ),
+                    'target'                => '',
+                    'attr_title'            => '',
+                    'description'           => '',
+                    'classes'               => [ 'menu-item', 'menu-item-type-taxonomy', 'menu-item-object-product_cat' ],
+                    'xfn'                   => '',
+                    'status'                => 'publish',
+                    'current'               => ( is_tax( 'product_cat', $cat->term_id ) ),
+                    'current_item_ancestor' => false,
+                    'current_item_parent'   => false,
+                ];
+                $sorted_menu_items[] = $cat_item;
+                $cat_id_counter--;
+            }
+        }
+    }
+
+    return $sorted_menu_items;
+}

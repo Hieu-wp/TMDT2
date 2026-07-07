@@ -47,8 +47,8 @@
         <h4>Hỗ Trợ Khách Hàng</h4>
         <div class="footer-links">
           <a href="#">Hướng dẫn đặt hàng</a>
-          <a href="#">Chính sách vận chuyển</a>
-          <a href="#">Chính sách đổi trả</a>
+          <a href="<?php echo esc_url( get_permalink( get_page_by_path( 'chinh-sach-van-chuyen' ) ?: 0 ) ); ?>">Chính sách vận chuyển</a>
+          <a href="<?php echo esc_url( get_permalink( get_page_by_path( 'chinh-sach-thanh-toan' ) ?: 0 ) ); ?>">Chính sách thanh toán</a>
           <a href="#">Chính sách bảo hành</a>
           <a href="#">Câu hỏi thường gặp</a>
           <a href="#">Theo dõi đơn hàng</a>
@@ -60,13 +60,13 @@
       <div class="footer-col">
         <h4>Danh Mục Sản Phẩm</h4>
         <div class="footer-links">
-          <a href="#">Nendoroid</a>
-          <a href="#">Scale Figure</a>
-          <a href="#">Figma</a>
-          <a href="#">Pop Up Parade</a>
+          <a href="<?php echo esc_url( home_url( '/?product_cat=nendoroid' ) ); ?>">Nendoroid</a>
+          <a href="<?php echo esc_url( home_url( '/?product_cat=scale-figure' ) ); ?>">Scale Figure</a>
+          <a href="<?php echo esc_url( home_url( '/?product_cat=figma' ) ); ?>">Figma</a>
+          <a href="<?php echo esc_url( home_url( '/?product_cat=pop-up-parade' ) ); ?>">Pop Up Parade</a>
           <a href="#">Plushie & Gấu bông</a>
           <a href="#">Statue & Premium</a>
-          <a href="#">Hàng Pre-order</a>
+          <a href="<?php echo esc_url( home_url( '/?product_cat=pre-order' ) ); ?>">Hàng Pre-order</a>
         </div>
       </div>
 
@@ -99,9 +99,9 @@
         &copy; <?php echo date('Y'); ?> AnimeFigure Store. Thiết kế bởi AnimeFigure Dev Team.
       </div>
       <div class="footer-bottom-links">
-        <a href="#">Điều khoản sử dụng</a>
+        <a href="<?php echo esc_url( get_permalink( get_page_by_path( 'dieu-khoan-su-dung' ) ?: 0 ) ); ?>">Điều khoản sử dụng</a>
         <a href="#">Chính sách bảo mật</a>
-        <a href="#">Sitemap</a>
+        <a href="<?php echo esc_url( get_permalink( get_page_by_path( 'gioi-thieu' ) ?: 0 ) ); ?>">Giới thiệu</a>
       </div>
       <div class="footer-payment">
         <div class="payment-icon">VISA</div>
