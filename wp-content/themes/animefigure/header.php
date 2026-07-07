@@ -65,8 +65,8 @@
           <?php
             $wishlist_count = 0;
             if ( is_user_logged_in() ) {
-                $wl = (array) get_user_meta( get_current_user_id(), '_wishlist', true );
-                $wishlist_count = count( $wl );
+                $wl = get_user_meta( get_current_user_id(), '_wishlist', true );
+                $wishlist_count = is_array( $wl ) ? count( array_filter( $wl ) ) : 0;
             }
           ?>
           <span class="action-badge" id="wishlist-count"><?php echo intval( $wishlist_count ); ?></span>

@@ -311,8 +311,22 @@ function animefigure_buy_now_redirect( $url ) {
 
 add_filter( 'woocommerce_registration_generate_username', '__return_true' );
 add_filter( 'woocommerce_registration_generate_password', '__return_false' );
+add_filter( 'woocommerce_login_redirect', 'animefigure_login_redirect_home' );
+add_filter( 'login_redirect', 'animefigure_wp_login_redirect_home', 10, 3 );
 add_filter( 'woocommerce_registration_redirect', 'animefigure_registration_redirect' );
 add_action( 'woocommerce_created_customer', 'animefigure_store_registration_username', 10, 3 );
+
+function animefigure_login_redirect_home( $redirect ) {
+    return home_url( '/' );
+}
+
+function animefigure_wp_login_redirect_home( $redirect_to, $requested_redirect_to, $user ) {
+    if ( $user instanceof WP_User && user_can( $user, 'manage_options' ) ) {
+        return $redirect_to;
+    }
+
+    return home_url( '/' );
+}
 
 function animefigure_store_registration_username( $customer_id, $new_customer_data, $password_generated ) {
     $user = get_userdata( $customer_id );
