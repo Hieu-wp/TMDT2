@@ -46,13 +46,14 @@
       <div class="footer-col">
         <h4>Hỗ Trợ Khách Hàng</h4>
         <div class="footer-links">
-          <a href="#">Hướng dẫn đặt hàng</a>
-          <a href="#">Chính sách vận chuyển</a>
-          <a href="#">Chính sách đổi trả</a>
-          <a href="#">Chính sách bảo hành</a>
-          <a href="#">Câu hỏi thường gặp</a>
-          <a href="#">Theo dõi đơn hàng</a>
-          <a href="#">Tra cứu bảo hành</a>
+          <a href="<?php echo esc_url( animefigure_get_page_url( 'chinh-sach-van-chuyen' ) ); ?>">Chính sách vận chuyển</a>
+          <a href="<?php echo esc_url( animefigure_get_page_url( 'chinh-sach-doi-tra' ) ); ?>">Chính sách đổi trả</a>
+          <a href="<?php echo esc_url( animefigure_get_page_url( 'chinh-sach-bao-hanh' ) ); ?>">Chính sách bảo hành</a>
+          <a href="<?php echo esc_url( animefigure_get_page_url( 'chinh-sach-thanh-toan' ) ); ?>">Chính sách thanh toán</a>
+          <a href="<?php echo esc_url( animefigure_get_page_url( 'chinh-sach-bao-mat' ) ); ?>">Chính sách bảo mật</a>
+          <a href="<?php echo esc_url( animefigure_get_page_url( 'dieu-khoan-su-dung' ) ); ?>">Điều khoản sử dụng</a>
+          <a href="<?php echo esc_url( animefigure_get_page_url( 'gioi-thieu' ) ); ?>">Giới thiệu</a>
+          <a href="<?php echo esc_url( animefigure_get_page_url( 'lien-he' ) ); ?>">Liên hệ</a>
         </div>
       </div>
 
@@ -99,8 +100,6 @@
         &copy; <?php echo date('Y'); ?> AnimeFigure Store. Thiết kế bởi AnimeFigure Dev Team.
       </div>
       <div class="footer-bottom-links">
-        <a href="#">Điều khoản sử dụng</a>
-        <a href="#">Chính sách bảo mật</a>
         <a href="#">Sitemap</a>
       </div>
       <div class="footer-payment">
