@@ -646,7 +646,7 @@ add_filter( 'gettext', 'animefigure_custom_cart_checkout_button_text', 20, 3 );
 function animefigure_custom_cart_checkout_button_text( $translated_text, $text, $domain ) {
     if ( 'woocommerce' === $domain ) {
         if ( strcasecmp( $text, 'Proceed to checkout' ) === 0 ) {
-            return 'Tiến hành đặt hàng';
+            return 'Tiến hành Thanh toán';
         }
     }
     return $translated_text;
@@ -762,3 +762,5 @@ function animefigure_redirect_edit_account_to_dashboard() {
     }
 }
 
+// 3. Bypass coming soon mode on the frontend for development / review
+add_filter( 'woocommerce_coming_soon_exclude', '__return_true' );

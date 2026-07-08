@@ -412,6 +412,67 @@
     });
   });
 
+  /* =========================================================
+     WOOCOMMERCE CUSTOM CART INTERACTION
+     ========================================================= */
+  // Quantity controller clicks
+  $(document).on('click', '.qty-minus, .qty-plus', function (e) {
+    e.preventDefault();
+    const $btn = $(this);
+    const $input = $btn.parent().find('input.qty');
+    if (!$input.length) return;
+    
+    let val = parseFloat($input.val()) || 0;
+    const step = parseFloat($input.attr('step')) || 1;
+    const min = parseFloat($input.attr('min')) || 0;
+    const max = parseFloat($input.attr('max')) || 99999;
+    
+    if ($btn.hasClass('qty-minus')) {
+      if (val > min) {
+        $input.val(val - step).trigger('change');
+      }
+    } else if ($btn.hasClass('qty-plus')) {
+      if (val < max) {
+        $input.val(val + step).trigger('change');
+      }
+    }
+  });
+
+  // Debounced auto cart update on quantity change
+  let cartUpdateTimer;
+  $(document).on('change', 'input.qty', function () {
+    clearTimeout(cartUpdateTimer);
+    const $form = $(this).closest('form');
+    cartUpdateTimer = setTimeout(() => {
+      const $updateBtn = $form.find('button[name="update_cart"]');
+      if ($updateBtn.length) {
+        $updateBtn.prop('disabled', false).trigger('click');
+      }
+    }, 600);
+  });
+
+  // Custom coupon field sync
+  $(document).on('click', '.custom-coupon-btn', function (e) {
+    e.preventDefault();
+    const val = $('.custom-coupon-input').val().trim();
+    if (!val) return;
+    
+    const $realInput = $('#coupon_code');
+    const $realBtn = $('button[name="apply_coupon"]');
+    
+    if ($realInput.length && $realBtn.length) {
+      $realInput.val(val);
+      $realBtn.prop('disabled', false).trigger('click');
+    }
+  });
+
+  $(document).on('keypress', '.custom-coupon-input', function (e) {
+    if (e.which === 13) {
+      e.preventDefault();
+      $('.custom-coupon-btn').trigger('click');
+    }
+  });
+
   console.log('%c🎭 AnimeFigure Store v1.0.0 loaded!', 'color:#2F80ED;font-size:14px;font-weight:bold;');
 
 })(typeof jQuery !== 'undefined' ? jQuery : { fn: {} });
