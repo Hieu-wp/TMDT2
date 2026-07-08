@@ -771,3 +771,20 @@ function animefigure_redirect_edit_account_to_dashboard() {
 
 // 3. Bypass coming soon mode on the frontend for development / review
 add_filter( 'woocommerce_coming_soon_exclude', '__return_true' );
+
+// 4. AJAX handler to fetch WooCommerce order status dynamically for checkout thank you screen
+add_action( 'wp_ajax_af_get_order_status', 'af_get_order_status_callback' );
+add_action( 'wp_ajax_nopriv_af_get_order_status', 'af_get_order_status_callback' );
+function af_get_order_status_callback() {
+    $order_id = isset( $_GET['order_id'] ) ? intval( $_GET['order_id'] ) : 0;
+    if ( $order_id ) {
+        $order = wc_get_order( $order_id );
+        if ( $order ) {
+            wp_send_json_success( array(
+                'status' => $order->get_status(),
+                'status_name' => wc_get_order_status_name( $order->get_status() )
+            ) );
+        }
+    }
+    wp_send_json_error( 'Order not found' );
+}
