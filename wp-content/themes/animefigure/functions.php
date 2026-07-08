@@ -125,6 +125,8 @@ remove_action( 'woocommerce_before_main_content', 'woocommerce_output_content_wr
 remove_action( 'woocommerce_after_main_content', 'woocommerce_output_content_wrapper_end', 10 );
 // Remove default WooCommerce sidebar
 remove_action( 'woocommerce_sidebar', 'woocommerce_get_sidebar', 10 );
+// Remove default breadcrumbs (we add them globally in header)
+remove_action( 'woocommerce_before_main_content', 'woocommerce_breadcrumb', 20, 0 );
 
 // Add custom wrappers
 add_action( 'woocommerce_before_main_content', 'animefigure_wrapper_start', 10 );
@@ -276,17 +278,7 @@ add_filter( 'excerpt_length', 'animefigure_excerpt_length' );
 /* =========================================================
    WOOCOMMERCE TWEAKS
    ========================================================= */
-remove_action( 'woocommerce_before_main_content', 'woocommerce_output_content_wrapper', 10 );
-remove_action( 'woocommerce_after_main_content', 'woocommerce_output_content_wrapper_end', 10 );
-remove_action( 'woocommerce_sidebar', 'woocommerce_get_sidebar', 10 );
 
-add_action( 'woocommerce_before_main_content', function() {
-    echo '<main class="wc-main"><div class="container">';
-}, 10 );
-
-add_action( 'woocommerce_after_main_content', function() {
-    echo '</div></main>';
-}, 10 );
 
 // Custom loop columns
 add_filter( 'loop_shop_columns', function() { return 4; } );

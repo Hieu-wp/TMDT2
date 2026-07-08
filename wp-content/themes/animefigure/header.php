@@ -177,6 +177,23 @@
   </div>
 </div>
 
+<?php if ( ! is_front_page() && function_exists( 'woocommerce_breadcrumb' ) ) : ?>
+<div class="global-breadcrumbs" style="background: #f8f9fa; padding: 16px 0; border-bottom: 1px solid #ececec; font-size: 15px; color: #666;">
+  <div class="container">
+    <?php 
+    woocommerce_breadcrumb( array(
+        'delimiter'   => ' &nbsp;&#47;&nbsp; ',
+        'wrap_before' => '<nav class="woocommerce-breadcrumb" style="margin:0;">',
+        'wrap_after'  => '</nav>',
+        'before'      => '',
+        'after'       => '',
+        'home'        => 'Trang chủ',
+    ) ); 
+    ?>
+  </div>
+</div>
+<?php endif; ?>
+
 <!-- =========================================================
      COMPACT TRUST STRIP
      ========================================================= -->
