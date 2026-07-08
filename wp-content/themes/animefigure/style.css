@@ -371,7 +371,13 @@ input, select, textarea {
   position: relative;
   overflow: hidden;
   background: #f0f4f8;
-  aspect-ratio: 3/4;
+  aspect-ratio: 1/1;
+}
+
+.product-card-image-wrap > a {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .product-card-image-wrap img {
@@ -557,6 +563,7 @@ input, select, textarea {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  min-height: 2.8em;
 }
 
 .product-name:hover {
