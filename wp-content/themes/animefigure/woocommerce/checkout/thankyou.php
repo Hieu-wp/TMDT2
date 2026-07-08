@@ -41,6 +41,114 @@ defined( 'ABSPATH' ) || exit;
             </div>
         </div>
 
+    <?php elseif ( $order->needs_payment() ) : ?>
+
+        <div class="af-thankyou__hero af-thankyou__hero--pending">
+            <div class="af-thankyou__hero-icon">💳</div>
+            <h1 class="af-thankyou__title">Chờ thanh toán</h1>
+            <p class="af-thankyou__subtitle">
+                Đơn hàng của bạn đã được ghi nhận. Vui lòng hoàn tất thanh toán để hệ thống xử lý đơn.
+            </p>
+            <div class="af-thankyou__order-badge">
+                Đơn hàng: <strong>#<?php echo esc_html( $order->get_order_number() ); ?></strong>
+            </div>
+        </div>
+
+        <div class="af-thankyou__grid">
+
+            <div class="af-thankyou__info-card">
+                <h3 class="af-card-title">📋 Thông tin đơn hàng</h3>
+                <table class="af-info-table">
+                    <tr>
+                        <td>Ngày đặt hàng</td>
+                        <td><strong><?php echo esc_html( wc_format_datetime( $order->get_date_created() ) ); ?></strong></td>
+                    </tr>
+                    <tr>
+                        <td>Trạng thái</td>
+                        <td>
+                            <span class="af-status-badge af-status-badge--<?php echo esc_attr( $order->get_status() ); ?>">
+                                <?php echo esc_html( wc_get_order_status_name( $order->get_status() ) ); ?>
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Tổng tiền</td>
+                        <td><strong class="af-total-amount"><?php echo wp_kses_post( $order->get_formatted_order_total() ); ?></strong></td>
+                    </tr>
+                    <tr>
+                        <td>Phương thức thanh toán</td>
+                        <td><strong><?php echo esc_html( $order->get_payment_method_title() ); ?></strong></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="af-thankyou__info-card">
+                <h3 class="af-card-title">📍 Địa chỉ nhận hàng</h3>
+                <address class="af-address">
+                    <?php echo wp_kses_post( $order->get_formatted_shipping_address() ?: $order->get_formatted_billing_address() ); ?>
+                </address>
+                <?php if ( $order->get_billing_phone() ) : ?>
+                    <p class="af-phone">📞 <?php echo esc_html( $order->get_billing_phone() ); ?></p>
+                <?php endif; ?>
+                <?php if ( $order->get_billing_email() ) : ?>
+                    <p class="af-email">✉️ <?php echo esc_html( $order->get_billing_email() ); ?></p>
+                <?php endif; ?>
+            </div>
+
+        </div>
+
+        <div class="af-thankyou__products">
+            <h3 class="af-card-title">🛍️ Sản phẩm đã đặt</h3>
+            <table class="af-order-items">
+                <thead>
+                    <tr>
+                        <th>Sản phẩm</th>
+                        <th>Số lượng</th>
+                        <th>Đơn giá</th>
+                        <th>Thành tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ( $order->get_items() as $item_id => $item ) :
+                        $product = $item->get_product();
+                    ?>
+                    <tr>
+                        <td class="af-product-name">
+                            <?php if ( $product ) : ?>
+                                <?php echo wp_kses_post( $product->get_image( [48, 48] ) ); ?>
+                            <?php endif; ?>
+                            <span><?php echo wp_kses_post( $item->get_name() ); ?></span>
+                        </td>
+                        <td class="af-product-qty">× <?php echo esc_html( $item->get_quantity() ); ?></td>
+                        <td><?php echo wp_kses_post( wc_price( $item->get_subtotal() / $item->get_quantity() ) ); ?></td>
+                        <td><strong><?php echo wp_kses_post( wc_price( $item->get_total() ) ); ?></strong></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+                <tfoot>
+                    <?php foreach ( $order->get_order_item_totals() as $key => $total ) : ?>
+                    <tr>
+                        <th colspan="3"><?php echo esc_html( $total['label'] ); ?></th>
+                        <td><?php echo wp_kses_post( $total['value'] ); ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tfoot>
+            </table>
+        </div>
+
+        <div class="af-thankyou__payment-box">
+            <div class="af-thankyou__payment-head">
+                <span class="af-thankyou__payment-badge">Chờ thanh toán</span>
+                <strong><?php echo esc_html( $order->get_payment_method_title() ); ?></strong>
+            </div>
+            <div class="af-thankyou__payment-actions">
+                <a href="<?php echo esc_url( $order->get_checkout_payment_url() ); ?>" class="af-btn af-btn--primary">Thanh toán</a>
+            </div>
+            <div class="af-thankyou__bacs-notice">
+                <?php do_action( 'woocommerce_thankyou_' . $order->get_payment_method(), $order->get_id() ); ?>
+            </div>
+        </div>
+
     <?php else : ?>
 
         <?php do_action( 'woocommerce_before_thankyou', $order->get_id() ); ?>
@@ -231,6 +339,16 @@ defined( 'ABSPATH' ) || exit;
     color: #fff;
     margin-bottom: 32px;
 }
+.af-thankyou__hero--pending {
+    background: linear-gradient(135deg, #fff8e6, #fff3cf);
+    color: #8a5a00;
+    border: 1px solid #ffd56a;
+}
+.af-thankyou__hero--pending .af-thankyou__title {
+    color: #b45309;
+    background: none;
+    -webkit-text-fill-color: initial;
+}
 .af-thankyou__hero-icon { font-size: 64px; margin-bottom: 16px; }
 .af-thankyou__title {
     font-size: 32px;
@@ -250,6 +368,40 @@ defined( 'ABSPATH' ) || exit;
     border-radius: 100px;
     padding: 8px 24px;
     font-size: 15px;
+}
+.af-thankyou__hero--pending .af-thankyou__order-badge {
+    background: rgba(255,255,255,0.55);
+    border-color: rgba(255, 213, 106, 0.6);
+    color: #8a5a00;
+}
+
+.af-thankyou__payment-box {
+    background: #fff;
+    border: 1px solid #ebedf0;
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+    margin-bottom: 24px;
+}
+.af-thankyou__payment-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+.af-thankyou__payment-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: #fef3c7;
+    color: #b45309;
+    font-size: 12px;
+    font-weight: 800;
+}
+.af-thankyou__payment-actions {
+    margin-bottom: 12px;
 }
 
 /* Grid */

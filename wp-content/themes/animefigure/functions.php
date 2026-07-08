@@ -632,6 +632,13 @@ function animefigure_custom_checkout_endpoint_titles( $title, $id ) {
     }
     if ( function_exists( 'is_checkout' ) && is_checkout() && $id === (int) get_option( 'woocommerce_checkout_page_id' ) ) {
         if ( is_wc_endpoint_url( 'order-received' ) ) {
+            $received_order_id = absint( get_query_var( 'order-received' ) );
+            if ( $received_order_id ) {
+                $received_order = wc_get_order( $received_order_id );
+                if ( $received_order && $received_order->needs_payment() ) {
+                    return 'Chờ thanh toán';
+                }
+            }
             return 'Trạng thái đơn hàng';
         }
         if ( is_wc_endpoint_url( 'order-pay' ) ) {
