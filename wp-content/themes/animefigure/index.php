@@ -102,6 +102,70 @@ get_header();
 <!-- =========================================================
      DANH MỤC NỔI BẬT
      ========================================================= -->
+<section class="series-section">
+  <div class="container">
+    <div class="series-header">
+      <h2 class="series-title">Danh Mục Nổi Bật</h2>
+    </div>
+    <div class="series-grid">
+      <?php
+      $categories = get_terms([
+          'taxonomy'   => 'product_cat',
+          'hide_empty' => false,
+          'exclude'    => [15], // Exclude 'Chưa phân loại'
+      ]);
+
+      if ( ! empty( $categories ) && ! is_wp_error( $categories ) ) {
+          foreach ( $categories as $cat ) {
+              $thumbnail_id = get_term_meta( $cat->term_id, 'thumbnail_id', true );
+              $image_url    = '';
+              
+              if ( $thumbnail_id ) {
+                  $image_url = wp_get_attachment_url( $thumbnail_id );
+              } else {
+                  // Fallback: Get the latest product in this category
+                  $args = [
+                      'post_type'      => 'product',
+                      'posts_per_page' => 1,
+                      'tax_query'      => [
+                          [
+                              'taxonomy' => 'product_cat',
+                              'field'    => 'term_id',
+                              'terms'    => $cat->term_id,
+                          ]
+                      ],
+                      'fields'         => 'ids'
+                  ];
+                  $products = get_posts( $args );
+                  if ( ! empty( $products ) ) {
+                      $product_thumb_id = get_post_thumbnail_id( $products[0] );
+                      if ( $product_thumb_id ) {
+                          $image_url = wp_get_attachment_url( $product_thumb_id );
+                      }
+                  }
+              }
+
+              // Final fallback if no product has an image either
+              if ( ! $image_url ) {
+                  $image_url = 'https://placehold.co/200x200/transparent/333?text=' . urlencode($cat->name);
+              }
+              
+              $cat_link = get_term_link( $cat );
+              ?>
+              <a href="<?php echo esc_url( $cat_link ); ?>" class="series-item">
+                <div class="series-image-wrap">
+                  <img src="<?php echo esc_url( $image_url ); ?>" alt="<?php echo esc_attr( $cat->name ); ?>">
+                </div>
+                <span class="series-name"><?php echo esc_html( $cat->name ); ?></span>
+              </a>
+              <?php
+          }
+      }
+      ?>
+    </div>
+  </div>
+</section>
+
 <!-- =========================================================
      FLASH SALE NỔI BẬT
      ========================================================= -->
