@@ -3101,3 +3101,136 @@ body.admin-bar .navbar {
     grid-template-columns: 1fr;
   }
 }
+/* =========================================================
+   WOOCOMMERCE CHECKOUT STYLES
+   ========================================================= */
+/* Info and Message boxes */
+.woocommerce-info, .woocommerce-message {
+    border-top-color: var(--color-primary) !important;
+    background-color: var(--color-bg-soft) !important;
+}
+.woocommerce-info::before, .woocommerce-message::before {
+    color: var(--color-primary) !important;
+}
+.woocommerce-error {
+    border-top-color: var(--color-primary-dark) !important;
+}
+.woocommerce-error::before {
+    color: var(--color-primary-dark) !important;
+}
+.woocommerce-info a, .woocommerce-message a, .woocommerce-error a {
+    color: var(--color-primary);
+}
+.woocommerce-info a:hover, .woocommerce-message a:hover, .woocommerce-error a:hover {
+    color: var(--color-primary-dark);
+}
+
+/* Form inputs focus state */
+.woocommerce form .form-row input.input-text:focus,
+.woocommerce form .form-row textarea:focus,
+.woocommerce form .form-row select:focus {
+    border-color: var(--color-primary) !important;
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-primary-light) !important;
+}
+
+/* Buttons */
+.woocommerce form.checkout_coupon .button,
+.woocommerce #respond input#submit, 
+.woocommerce a.button, 
+.woocommerce button.button, 
+.woocommerce input.button {
+    background-color: var(--color-primary);
+    color: #fff;
+    border: none;
+    transition: background-color 0.3s;
+}
+.woocommerce form.checkout_coupon .button:hover,
+.woocommerce #respond input#submit:hover, 
+.woocommerce a.button:hover, 
+.woocommerce button.button:hover, 
+.woocommerce input.button:hover {
+    background-color: var(--color-primary-dark);
+    color: #fff;
+}
+
+/* Order Table */
+.woocommerce table.shop_table {
+    border-color: var(--color-border);
+    border-radius: 8px;
+    overflow: hidden;
+}
+.woocommerce table.shop_table th {
+    background-color: var(--color-bg-soft);
+    color: var(--color-text);
+}
+
+/* Payment Box */
+.woocommerce-checkout #payment {
+    background: var(--color-bg-soft) !important;
+    border-radius: 8px;
+    padding: 20px;
+}
+.woocommerce-checkout #payment ul.payment_methods {
+    border-bottom-color: var(--color-border) !important;
+}
+.woocommerce-checkout #payment div.payment_box {
+    background-color: #fff !important;
+    color: var(--color-text-muted) !important;
+}
+.woocommerce-checkout #payment div.payment_box::before {
+    border-bottom-color: #fff !important;
+}
+
+/* Place Order Button */
+.woocommerce #payment #place_order {
+    background-color: var(--color-primary) !important;
+    color: #fff !important;
+    font-weight: 600;
+    font-size: 1.1rem;
+    padding: 15px 30px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    width: 100%;
+    margin-top: 20px;
+}
+.woocommerce #payment #place_order:hover {
+    background-color: var(--color-primary-dark) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(242, 140, 140, 0.4);
+}
+
+/* Always show coupon form */
+.woocommerce-checkout .checkout_coupon {
+    display: block !important;
+}
+.woocommerce-form-coupon-toggle {
+    display: none !important;
+}
+
+/* Stack checkout columns vertically and center */
+.woocommerce-checkout #customer_details.col2-set {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin: 0;
+}
+.woocommerce-checkout #customer_details.col2-set .col-1,
+.woocommerce-checkout #customer_details.col2-set .col-2 {
+    width: 100%;
+    max-width: 800px;
+    float: none;
+    margin-bottom: 2rem;
+    padding: 0;
+}
+
+/* Center the order review section to match */
+.woocommerce-checkout h3#order_review_heading,
+.woocommerce-checkout #order_review,
+.woocommerce-checkout .woocommerce-checkout-review-order {
+    max-width: 800px;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    width: 100%;
+}
