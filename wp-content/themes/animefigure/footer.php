@@ -57,17 +57,45 @@
         </div>
       </div>
 
-      <!-- Danh mục -->
+      <!-- Mô hình -->
       <div class="footer-col">
-        <h4>Danh Mục Sản Phẩm</h4>
+        <h4>Mô hình</h4>
         <div class="footer-links">
-          <a href="#">Nendoroid</a>
-          <a href="#">Scale Figure</a>
-          <a href="#">Figma</a>
-          <a href="#">Pop Up Parade</a>
-          <a href="#">Plushie & Gấu bông</a>
-          <a href="#">Statue & Premium</a>
-          <a href="#">Hàng Pre-order</a>
+          <?php
+          $cats = [
+              'nendoroid'      => 'Nendoroid',
+              'scale-figure'   => 'Scale Figure',
+              'figma'          => 'Figma',
+              'pop-up-parade'  => 'Pop Up Parade',
+              'statue-premium' => 'Statue & Premium'
+          ];
+          foreach ($cats as $slug => $label) {
+              $term = get_term_by('slug', $slug, 'product_cat');
+              $link = $term ? get_term_link($term) : home_url("/index.php/danh-muc-san-pham/{$slug}/");
+              echo '<a href="' . esc_url($link) . '">' . esc_html($label) . '</a>';
+          }
+          ?>
+        </div>
+      </div>
+
+      <!-- Phụ kiện -->
+      <div class="footer-col">
+        <h4>Phụ kiện</h4>
+        <div class="footer-links">
+          <?php
+          $accs = [
+              'hop-trung-bay'     => 'Hộp trưng bày',
+              'de-dung-mo-hinh'   => 'Đế đứng mô hình',
+              'den-led-trang-tri' => 'Đèn LED trang trí',
+              'dung-cu-ve-sinh'   => 'Dụng cụ vệ sinh',
+              'backdrop-canh-nen' => 'Backdrop cảnh nền'
+          ];
+          foreach ($accs as $slug => $label) {
+              $term = get_term_by('slug', $slug, 'product_cat');
+              $link = $term ? get_term_link($term) : home_url("/index.php/danh-muc-san-pham/{$slug}/");
+              echo '<a href="' . esc_url($link) . '">' . esc_html($label) . '</a>';
+          }
+          ?>
         </div>
       </div>
 
