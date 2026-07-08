@@ -126,7 +126,9 @@ remove_action( 'woocommerce_after_main_content', 'woocommerce_output_content_wra
 // Remove default WooCommerce sidebar
 remove_action( 'woocommerce_sidebar', 'woocommerce_get_sidebar', 10 );
 // Remove default breadcrumbs (we add them globally in header)
-remove_action( 'woocommerce_before_main_content', 'woocommerce_breadcrumb', 20, 0 );
+add_action( 'init', function() {
+    remove_action( 'woocommerce_before_main_content', 'woocommerce_breadcrumb', 20 );
+});
 
 // Add custom wrappers
 add_action( 'woocommerce_before_main_content', 'animefigure_wrapper_start', 10 );
@@ -134,11 +136,9 @@ function animefigure_wrapper_start() {
     echo '<div class="container shop-container" style="padding-top: 40px; padding-bottom: 60px; display: flex; gap: 40px; align-items: flex-start;">';
     
     // Print sidebar on the left
-    if ( is_active_sidebar( 'sidebar-shop' ) ) {
-        echo '<aside class="shop-sidebar" style="flex: 0 0 280px; position: sticky; top: 100px;">';
-        dynamic_sidebar( 'sidebar-shop' );
-        echo '</aside>';
-    }
+    echo '<aside class="shop-sidebar" style="flex: 0 0 260px; position: sticky; top: 100px; max-height: calc(100vh - 120px); overflow-y: auto;">';
+    get_sidebar( 'shop' );
+    echo '</aside>';
 
     echo '<div class="shop-main-content" style="flex: 1; min-width: 0;">';
 }
@@ -779,4 +779,86 @@ function af_get_order_status_callback() {
         }
     }
     wp_send_json_error( 'Order not found' );
+}
+
+/**
+ * Render product card for WooCommerce
+ */
+function render_product_card($product, $idx = 0) {
+  if (!$product || !is_a($product, 'WC_Product')) return;
+  $delay_class = 'reveal-delay-' . min($idx + 1, 4);
+  ?>
+  <div class="product-card reveal <?php echo $delay_class; ?>">
+    <div class="product-card-image-wrap">
+
+      <!-- Badge -->
+      <div class="product-badge">
+        <?php if ($product->is_on_sale()): ?>
+          <span class="badge badge-sale">Sale</span>
+        <?php endif; ?>
+        <?php 
+        $created_days = (time() - strtotime($product->get_date_created())) / (60 * 60 * 24);
+        if ($created_days < 14): ?>
+          <span class="badge badge-new">New</span>
+        <?php endif; ?>
+      </div>
+
+      <!-- Wishlist -->
+      <?php
+      $current_user_wishlist = (array) get_user_meta( get_current_user_id(), '_wishlist', true );
+      $is_fav = in_array( $product->get_id(), $current_user_wishlist );
+      ?>
+      <button class="product-wishlist-btn<?php echo $is_fav ? ' active' : ''; ?>" data-id="<?php echo esc_attr( $product->get_id() ); ?>" aria-label="Thêm vào wishlist">
+        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+      </button>
+
+      <!-- Image -->
+      <a href="<?php echo esc_url($product->get_permalink()); ?>">
+        <?php 
+        if ($product->get_image_id()) {
+          echo $product->get_image('woocommerce_thumbnail', ['loading' => 'lazy', 'alt' => esc_attr($product->get_name())]);
+        } else {
+          echo '<div class="img-placeholder" style="width:100%;height:100%;aspect-ratio:3/4;background:#f0f4f8;display:flex;align-items:center;justify-content:center;font-size:48px;">🎭</div>';
+        }
+        ?>
+      </a>
+
+      <!-- Overlay actions -->
+      <div class="product-card-overlay">
+        <a href="<?php echo esc_url($product->get_permalink()); ?>" class="btn-quickview" style="display:flex;justify-content:center;text-decoration:none;align-items:center;padding:12px;background:rgba(255,255,255,0.95);border-radius:24px;font-weight:600;font-size:13px;color:#222;margin-bottom:8px;">
+          👁 Xem chi tiết
+        </a>
+        <a href="?add-to-cart=<?php echo esc_attr($product->get_id()); ?>" data-quantity="1" class="btn-addtocart ajax_add_to_cart" data-product_id="<?php echo esc_attr($product->get_id()); ?>" data-product_sku="<?php echo esc_attr($product->get_sku()); ?>" aria-label="Thêm vào giỏ">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/></svg>
+          Thêm vào giỏ
+        </a>
+      </div>
+    </div>
+
+    <div class="product-card-info">
+      <?php 
+      $brands = wc_get_product_terms( $product->get_id(), 'product_cat', ['fields' => 'names'] );
+      $brand_name = !empty($brands) ? $brands[0] : 'Mô hình';
+      ?>
+      <div class="product-brand"><?php echo esc_html($brand_name); ?></div>
+      <a href="<?php echo esc_url($product->get_permalink()); ?>" class="product-name"><?php echo esc_html($product->get_name()); ?></a>
+      <div class="product-rating">
+        <?php 
+        $rating = $product->get_average_rating();
+        $stars = round($rating);
+        for ($s = 1; $s <= 5; $s++) {
+          echo $s <= $stars ? '<span style="color:#f5c518;font-size:13px;">★</span>' : '<span style="color:#ddd;font-size:13px;">★</span>';
+        }
+        ?>
+        <span class="rating-count">(<?php echo $product->get_review_count(); ?>)</span>
+      </div>
+      <div class="product-price">
+        <span class="price-current" style="font-weight:800;color:var(--color-primary);font-size:18px;"><?php echo wc_price(wc_get_price_to_display($product)); ?></span>
+        <?php if ($product->is_on_sale() && $product->get_regular_price()): ?>
+          <span class="price-original" style="text-decoration:line-through;color:#999;font-size:13px;margin-left:6px;"><?php echo wc_price(wc_get_price_to_display($product, ['price' => $product->get_regular_price()])); ?></span>
+        <?php endif; ?>
+      </div>
+    </div>
+  </div>
+  <?php
 }

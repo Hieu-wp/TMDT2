@@ -81,9 +81,6 @@ $alphabet[] = '#';
 </style>
 
 <div class="char-page-container">
-    <div class="char-breadcrumb">
-        <a href="<?php echo home_url(); ?>">Trang chủ</a> / <span>Nhân vật</span>
-    </div>
 
     <!-- Search Box -->
     <div class="char-search-wrapper">

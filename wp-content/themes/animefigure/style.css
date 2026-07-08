@@ -4669,3 +4669,42 @@ body.woocommerce-cart .container {
         transform: translateX(100%);
     }
 }
+
+/* =========================================================
+   SHOP FILTER WIDGET & GRID
+   ========================================================= */
+.shop-filter-widget { background: #fff; padding: 24px; border-radius: 12px; font-family: var(--font-primary); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+.filter-header { margin-bottom: 24px; }
+.filter-title { font-size: 18px; font-weight: 800; color: var(--color-primary); text-transform: uppercase; margin-bottom: 8px; }
+.filter-subtitle { font-size: 14px; font-style: italic; color: #666; margin: 0; }
+.filter-group { margin-bottom: 20px; border-bottom: 1px solid #f0f0f0; padding-bottom: 16px; }
+.filter-group:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.filter-group-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; color: var(--color-primary); font-weight: 700; margin-bottom: 16px; }
+.filter-group-header h4 { font-size: 16px; margin: 0; font-weight: 700; }
+.filter-group-header svg { width: 18px; height: 18px; stroke-width: 2.5; }
+.filter-group-content { display: flex; flex-direction: column; gap: 14px; max-height: 220px; padding-right: 12px; overflow-y: auto; overflow-x: hidden; }
+.custom-scrollbar::-webkit-scrollbar { width: 3px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: var(--color-primary-light); border-radius: 3px; }
+.custom-radio { display: flex; align-items: center; cursor: pointer; position: relative; user-select: none; }
+.custom-radio input { position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0; }
+.radio-mark { height: 18px; width: 18px; background-color: #fff; border: 1.5px solid #ccc; border-radius: 50%; margin-right: 12px; transition: 0.2s; flex-shrink: 0; }
+.custom-radio:hover input ~ .radio-mark { border-color: var(--color-primary); }
+.custom-radio input:checked ~ .radio-mark { border-color: var(--color-primary); border-width: 5px; }
+.label-text { font-size: 15px; color: #444; flex: 1; }
+.custom-radio svg { width: 16px; height: 16px; color: var(--color-primary); stroke-width: 2.5; }
+
+/* WooCommerce Shop Grid */
+ul.products { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; list-style: none; margin: 0; padding: 0; }
+@media (max-width: 1024px) { ul.products { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 768px) { ul.products { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { ul.products { grid-template-columns: repeat(1, 1fr); } }
+.woocommerce-ordering { margin-bottom: 24px; }
+.woocommerce-ordering select { padding: 8px 16px; border-radius: 8px; border: 1px solid #ddd; outline: none; font-family: inherit; }
+.woocommerce-result-count { margin-bottom: 24px; color: #666; font-size: 14px; }
+.shop-container { padding-top: 40px; padding-bottom: 60px; display: flex; gap: 40px; align-items: flex-start; }
+.shop-sidebar { flex: 0 0 280px; position: sticky; top: 100px; max-height: calc(100vh - 120px); overflow-y: auto; overflow-x: hidden; padding-right: 10px; }
+.shop-sidebar::-webkit-scrollbar { width: 4px; }
+.shop-sidebar::-webkit-scrollbar-track { background: transparent; }
+.shop-sidebar::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+.shop-main-content { flex: 1; min-width: 0; }
