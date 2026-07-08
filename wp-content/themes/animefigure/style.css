@@ -3260,27 +3260,27 @@ body.admin-bar .navbar {
 }
 
 /* Split layout on desktop */
-.woocommerce-cart .woocommerce {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 40px;
-    align-items: flex-start;
+.woocommerce-cart .cart-page-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(360px, 0.75fr);
+  gap: 40px;
+  align-items: start;
 }
 
 .woocommerce-cart .woocommerce-cart-form {
-    flex: 1 1 650px;
-    min-width: 0;
+  min-width: 0;
 }
 
 .woocommerce-cart .cart-collaterals {
-    flex: 0 0 400px;
-    width: 400px;
-    position: sticky;
-    top: 100px;
+  width: 100%;
+  position: sticky;
+  top: 100px;
+  align-self: start;
 }
 
 @media (max-width: 991px) {
-    .woocommerce-cart .woocommerce {
+  .woocommerce-cart .cart-page-layout {
+    display: flex;
         flex-direction: column;
     }
     .woocommerce-cart .cart-collaterals {

@@ -641,12 +641,12 @@ function animefigure_custom_checkout_endpoint_titles( $title, $id ) {
     return $title;
 }
 
-// Translate "Proceed to checkout" button text to "Tiến hành đặt hàng"
+// Translate "Proceed to checkout" button text to "Đặt hàng"
 add_filter( 'gettext', 'animefigure_custom_cart_checkout_button_text', 20, 3 );
 function animefigure_custom_cart_checkout_button_text( $translated_text, $text, $domain ) {
     if ( 'woocommerce' === $domain ) {
         if ( strcasecmp( $text, 'Proceed to checkout' ) === 0 ) {
-            return 'Tiến hành Thanh toán';
+            return 'Đặt hàng';
         }
     }
     return $translated_text;

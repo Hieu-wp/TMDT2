@@ -17,6 +17,8 @@ do_action( 'woocommerce_before_cart' ); ?>
     Giỏ hàng của tôi
 </h1>
 
+<div class="cart-page-layout">
+
 <form class="woocommerce-cart-form" action="<?php echo esc_url( wc_get_cart_url() ); ?>" method="post">
     <?php do_action( 'woocommerce_before_cart_table' ); ?>
 
@@ -169,12 +171,6 @@ do_action( 'woocommerce_before_cart' ); ?>
     <?php do_action( 'woocommerce_after_cart_table' ); ?>
 </form>
 
-<div class="continue-shopping-wrapper">
-    <a href="<?php echo esc_url( apply_filters( 'woocommerce_return_to_shop_redirect', wc_get_page_permalink( 'shop' ) ) ); ?>" class="continue-shopping-link">
-        Tiếp tục mua sắm
-    </a>
-</div>
-
 <?php do_action( 'woocommerce_before_cart_collaterals' ); ?>
 
 <div class="cart-collaterals">
@@ -187,6 +183,14 @@ do_action( 'woocommerce_before_cart' ); ?>
          */
         do_action( 'woocommerce_cart_collaterals' );
     ?>
+</div>
+
+</div>
+
+<div class="continue-shopping-wrapper">
+    <a href="<?php echo esc_url( apply_filters( 'woocommerce_return_to_shop_redirect', wc_get_page_permalink( 'shop' ) ) ); ?>" class="continue-shopping-link">
+        Tiếp tục mua sắm
+    </a>
 </div>
 
 <?php do_action( 'woocommerce_after_cart' ); ?>
