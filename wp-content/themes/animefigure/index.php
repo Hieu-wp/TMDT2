@@ -116,6 +116,11 @@ get_header();
       ]);
 
       if ( ! empty( $categories ) && ! is_wp_error( $categories ) ) {
+          // Filter to only include child categories (parent != 0)
+          $categories = array_filter($categories, function($cat) {
+              return $cat->parent != 0;
+          });
+
           foreach ( $categories as $cat ) {
               $thumbnail_id = get_term_meta( $cat->term_id, 'thumbnail_id', true );
               $image_url    = '';
