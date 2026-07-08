@@ -28,12 +28,10 @@ get_header();
         <div class="hero-label">✨ Bộ sưu tập 2025 đã có mặt</div>
         <h1 class="hero-title">
           Thiên Đường<br>
-          <span class="highlight">Mô Hình Anime</span><br>
+          <span class="highlight">Mô Hình</span><br>
           Chính Hãng
         </h1>
-        <p class="hero-desc">
-          Khám phá hơn <strong style="color:#74b8f7;">2,000+ sản phẩm</strong> độc quyền từ các thương hiệu hàng đầu Nhật Bản — Good Smile, Max Factory, Bandai Spirits và nhiều hơn nữa.
-        </p>
+        
         <div class="hero-cta">
           <a href="<?php echo function_exists('wc_get_page_id') ? get_permalink( wc_get_page_id('shop') ) : '#'; ?>" class="btn btn-primary btn-lg">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
@@ -44,7 +42,7 @@ get_header();
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
           </a>
         </div>
-        <div class="hero-stats">
+        <!-- <div class="hero-stats">
           <div class="hero-stat">
             <span class="hero-stat-number">2,000+</span>
             <span class="hero-stat-label">Sản phẩm</span>
@@ -61,7 +59,7 @@ get_header();
             <span class="hero-stat-number">4.9★</span>
             <span class="hero-stat-label">Đánh giá</span>
           </div>
-        </div>
+        </div> -->
       </div>
 
       <!-- Hero Visual -->
