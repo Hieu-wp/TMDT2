@@ -736,3 +736,29 @@ function animefigure_ajax_delete_extra_address() {
 
     wp_send_json_success( [ 'addresses' => $addresses ] );
 }
+
+/**
+ * WooCommerce My Account Customizations
+ * Kết hợp trang Dashboard và Edit Account thành 1 trang duy nhất
+ */
+// 1. Loại bỏ mục "Chi tiết tài khoản" (edit-account) khỏi menu
+add_filter( 'woocommerce_account_menu_items', 'animefigure_remove_edit_account_menu_item' );
+function animefigure_remove_edit_account_menu_item( $items ) {
+    if ( isset( $items['edit-account'] ) ) {
+        unset( $items['edit-account'] );
+    }
+    return $items;
+}
+
+// 2. Chuyển hướng nếu truy cập trực tiếp link /tai-khoan/edit-account/ về trang /tai-khoan/
+add_action( 'template_redirect', 'animefigure_redirect_edit_account_to_dashboard' );
+function animefigure_redirect_edit_account_to_dashboard() {
+    if ( is_account_page() ) {
+        global $wp;
+        if ( isset( $wp->query_vars['edit-account'] ) ) {
+            wp_safe_redirect( wc_get_page_permalink( 'myaccount' ) );
+            exit;
+        }
+    }
+}
+

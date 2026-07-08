@@ -38,29 +38,66 @@ if ( isset( $_POST['shopee_save_profile_submit'] ) ) {
             $msg_text = 'Địa chỉ Email này đã được sử dụng bởi một tài khoản khác.';
             $msg_type = 'error';
         } else {
-            // Cập nhật vào Cơ sở dữ liệu
-            $user_id = wp_update_user( array(
-                'ID'           => $current_user->ID,
-                'display_name' => $inserted_name,
-                'user_email'   => $inserted_email
-            ) );
-            
-            if ( ! is_wp_error( $user_id ) ) {
-                update_user_meta( $current_user->ID, 'gender', $inserted_gender );
-                
-                if ( isset($_POST['dob_date'], $_POST['dob_month'], $_POST['dob_year']) ) {
-                    $dob = sanitize_text_field($_POST['dob_year'] . '-' . $_POST['dob_month'] . '-' . $_POST['dob_date']);
-                    update_user_meta( $current_user->ID, 'billing_birthdate', $dob );
+            // BẮT ĐẦU KIỂM TRA MẬT KHẨU
+            $change_password = false;
+            $pass_current = isset( $_POST['password_current'] ) ? $_POST['password_current'] : '';
+            $pass_new1    = isset( $_POST['password_1'] ) ? $_POST['password_1'] : '';
+            $pass_new2    = isset( $_POST['password_2'] ) ? $_POST['password_2'] : '';
+
+            if ( ! empty( $pass_current ) || ! empty( $pass_new1 ) || ! empty( $pass_new2 ) ) {
+                if ( empty( $pass_current ) || empty( $pass_new1 ) || empty( $pass_new2 ) ) {
+                    $msg_text = 'Vui lòng điền đầy đủ tất cả các trường để đổi mật khẩu.';
+                    $msg_type = 'error';
+                } elseif ( ! wp_check_password( $pass_current, $current_user->user_pass, $current_user->ID ) ) {
+                    $msg_text = 'Mật khẩu hiện tại không chính xác.';
+                    $msg_type = 'error';
+                } elseif ( $pass_new1 !== $pass_new2 ) {
+                    $msg_text = 'Xác nhận mật khẩu mới không trùng khớp.';
+                    $msg_type = 'error';
+                } elseif ( strlen( $pass_new1 ) < 6 ) {
+                    $msg_text = 'Mật khẩu mới phải từ 6 ký tự trở lên.';
+                    $msg_type = 'error';
+                } else {
+                    $change_password = true;
+                }
+            }
+
+            if ( $msg_type !== 'error' ) {
+                // Cập nhật vào Cơ sở dữ liệu
+                $user_data = array(
+                    'ID'           => $current_user->ID,
+                    'display_name' => $inserted_name,
+                    'user_email'   => $inserted_email
+                );
+                if ( $change_password ) {
+                    $user_data['user_pass'] = $pass_new1;
                 }
                 
-                // [QUAN TRỌNG] Tự động chuyển hướng lại chính trang này để ép buộc hệ thống nạp dữ liệu mới
-                // Thêm tham số ?profile_updated=1 để nhận diện vừa cập nhật xong
-                $redirect_url = add_query_arg( 'profile_updated', '1', wp_get_referer() ? wp_get_referer() : window.location.href );
-                wp_safe_redirect( $redirect_url );
-                exit; // Dừng chương trình để trình duyệt thực hiện chuyển hướng
-            } else {
-                $msg_text = 'Có lỗi xảy ra: ' . $user_id->get_error_message();
-                $msg_type = 'error';
+                $user_id = wp_update_user( $user_data );
+                
+                if ( ! is_wp_error( $user_id ) ) {
+                    update_user_meta( $current_user->ID, 'gender', $inserted_gender );
+                    
+                    if ( isset($_POST['dob_date'], $_POST['dob_month'], $_POST['dob_year']) ) {
+                        $dob = sanitize_text_field($_POST['dob_year'] . '-' . $_POST['dob_month'] . '-' . $_POST['dob_date']);
+                        update_user_meta( $current_user->ID, 'billing_birthdate', $dob );
+                    }
+                    
+                    if ( $change_password ) {
+                        // Cập nhật lại cookie đăng nhập để không bị kick out
+                        wp_set_current_user( $current_user->ID );
+                        wp_set_auth_cookie( $current_user->ID );
+                    }
+                    
+                    // [QUAN TRỌNG] Tự động chuyển hướng lại chính trang này để ép buộc hệ thống nạp dữ liệu mới
+                    // Thêm tham số ?profile_updated=1 để nhận diện vừa cập nhật xong
+                    $redirect_url = add_query_arg( 'profile_updated', '1', wp_get_referer() ? wp_get_referer() : home_url( '/tai-khoan/' ) );
+                    wp_safe_redirect( $redirect_url );
+                    exit; // Dừng chương trình để trình duyệt thực hiện chuyển hướng
+                } else {
+                    $msg_text = 'Có lỗi xảy ra: ' . $user_id->get_error_message();
+                    $msg_type = 'error';
+                }
             }
         }
     }
@@ -175,7 +212,8 @@ function mask_shopee_phone( $phone ) {
 }
 
 .shopee-profile-container input[type="text"],
-.shopee-profile-container input[type="email"] {
+.shopee-profile-container input[type="email"],
+.shopee-profile-container input[type="password"] {
     width: 100% !important;
     max-width: 400px !important;
     padding: 10px 14px !important;
@@ -187,7 +225,8 @@ function mask_shopee_phone( $phone ) {
     height: auto !important;
 }
 .shopee-profile-container input[type="text"]:focus,
-.shopee-profile-container input[type="email"]:focus {
+.shopee-profile-container input[type="email"]:focus,
+.shopee-profile-container input[type="password"]:focus {
     border-color: #F28C8C !important; 
     outline: none !important;
 }
@@ -325,7 +364,7 @@ function mask_shopee_phone( $phone ) {
     border: 1px solid #fbc4cb !important;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 991px) {
     .profile-body { flex-direction: column-reverse !important; }
     .profile-right-col {
         width: 100% !important;
@@ -358,6 +397,17 @@ function mask_shopee_phone( $phone ) {
     <form id="shopee-profile-form" method="post" action="">
         <input type="hidden" name="nonce" value="<?php echo wp_create_nonce('shopee_save_profile_action'); ?>">
         
+        <div class="profile-right-col">
+                <div class="avatar-upload-wrap">
+                    <div class="avatar-preview">
+                        <?php echo get_avatar( $current_user->ID, 110, '', 'Ảnh đại diện' ); ?>
+                    </div>
+                    <button type="button" class="btn-select-image" onclick="alert('Tính năng đổi ảnh đang liên kết thông qua hệ thống tài khoản WordPress Gravatar.');">Chọn ảnh</button>
+                    <div style="margin: 20px !important; font-size: 12px !important; color: #666666 !important; line-height: 1.6 !important;">
+                        
+                    </div>
+                </div>
+            </div>
         <div class="profile-body">
             
             <div class="profile-left-col">
@@ -428,6 +478,34 @@ function mask_shopee_phone( $phone ) {
                     </div>
                 </div>
 
+                <hr style="border: 0; border-top: 1px dashed #ECECEC; margin: 25px 0 !important; display: block;" />
+                
+                <div class="profile-header" style="margin-bottom: 20px;">
+                    <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 5px 0; color: #2D2D2D;">Đổi mật khẩu</h3>
+                    <p style="font-size: 12px; color: #666; margin: 0;">Để trống các ô dưới đây nếu bạn không muốn thay đổi mật khẩu.</p>
+                </div>
+
+                <div class="form-group">
+                    <label>Mật khẩu hiện tại</label>
+                    <div class="input-wrap">
+                        <input type="password" name="password_current" placeholder="Nhập mật khẩu hiện tại" autocomplete="off" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Mật khẩu mới</label>
+                    <div class="input-wrap">
+                        <input type="password" name="password_1" placeholder="Nhập mật khẩu mới" autocomplete="off" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Xác nhận mật khẩu</label>
+                    <div class="input-wrap">
+                        <input type="password" name="password_2" placeholder="Xác nhận mật khẩu mới" autocomplete="off" />
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label></label>
                     <div class="input-wrap">
@@ -437,18 +515,7 @@ function mask_shopee_phone( $phone ) {
 
             </div>
 
-            <div class="profile-right-col">
-                <div class="avatar-upload-wrap">
-                    <div class="avatar-preview">
-                        <?php echo get_avatar( $current_user->ID, 110, '', 'Ảnh đại diện' ); ?>
-                    </div>
-                    <button type="button" class="btn-select-image" onclick="alert('Tính năng đổi ảnh đang liên kết thông qua hệ thống tài khoản WordPress Gravatar.');">Chọn ảnh</button>
-                    <div style="margin-top: 15px !important; font-size: 12px !important; color: #666666 !important; line-height: 1.6 !important;">
-                        <p style="margin:0;">Dung lượng tệp tối đa: 1 MB</p>
-                        <p style="margin:0;">Định dạng tệp cho phép: .JPEG, .PNG</p>
-                    </div>
-                </div>
-            </div>
+            
 
         </div>
     </form>
