@@ -14,6 +14,9 @@ define( 'ANIMEFIGURE_URI', get_template_directory_uri() );
    THEME SETUP
    ========================================================= */
 require_once ANIMEFIGURE_DIR . '/inc/characters.php';
+require_once ANIMEFIGURE_DIR . '/inc/order-status.php';
+require_once ANIMEFIGURE_DIR . '/inc/order-flow.php';
+require_once ANIMEFIGURE_DIR . '/inc/promotions.php';
 
 function animefigure_setup() {
     add_theme_support( 'title-tag' );
@@ -621,7 +624,7 @@ add_action( 'init', 'animefigure_ensure_static_pages', 30 );
    CUSTOM CHECKOUT FLOW LOGIC
    ========================================================= */
 
-// Dynamically change checkout page title on order-received and order-pay pages to "Thanh toán đơn hàng"
+// Dynamically change checkout page title on order-received and order-pay pages to "Thanh toán đơn hàng" / "Trạng thái đơn hàng"
 add_filter( 'the_title', 'animefigure_custom_checkout_endpoint_titles', 10, 2 );
 function animefigure_custom_checkout_endpoint_titles( $title, $id ) {
     if ( is_admin() ) {
@@ -629,7 +632,7 @@ function animefigure_custom_checkout_endpoint_titles( $title, $id ) {
     }
     if ( function_exists( 'is_checkout' ) && is_checkout() && $id === (int) get_option( 'woocommerce_checkout_page_id' ) ) {
         if ( is_wc_endpoint_url( 'order-received' ) ) {
-            return 'Thanh toán đơn hàng';
+            return 'Trạng thái đơn hàng';
         }
         if ( is_wc_endpoint_url( 'order-pay' ) ) {
             return 'Thanh toán đơn hàng';
@@ -649,3 +652,87 @@ function animefigure_custom_cart_checkout_button_text( $translated_text, $text, 
     return $translated_text;
 }
 
+// Note: woocommerce_thankyou_order_received_text và order flow hooks
+// đã được chuyển sang inc/order-flow.php để tổ chức code gọn hơn.
+
+/* =========================================================
+   AJAX: EXTRA ADDRESS MANAGEMENT (my-address.php)
+   ========================================================= */
+
+/**
+ * Lưu địa chỉ phụ vào user meta (_af_extra_addresses)
+ * Xử lý cả thêm mới (idx = -1) và sửa (idx >= 0)
+ */
+add_action( 'wp_ajax_af_save_extra_address', 'animefigure_ajax_save_extra_address' );
+function animefigure_ajax_save_extra_address() {
+    check_ajax_referer( 'af_address_nonce', 'nonce' );
+
+    $user_id = get_current_user_id();
+    if ( ! $user_id ) {
+        wp_send_json_error( 'Bạn cần đăng nhập.' );
+    }
+
+    $idx      = isset( $_POST['idx'] ) ? intval( $_POST['idx'] ) : -1;
+    $new_addr = [
+        'full_name' => sanitize_text_field( $_POST['full_name'] ?? '' ),
+        'phone'     => sanitize_text_field( $_POST['phone'] ?? '' ),
+        'address'   => sanitize_text_field( $_POST['address'] ?? '' ),
+        'ward'      => sanitize_text_field( $_POST['ward'] ?? '' ),
+        'district'  => sanitize_text_field( $_POST['district'] ?? '' ),
+        'city'      => sanitize_text_field( $_POST['city'] ?? '' ),
+        'label'     => sanitize_text_field( $_POST['label'] ?? '' ),
+    ];
+
+    // Validate bắt buộc
+    $required = [ 'full_name', 'phone', 'address', 'ward', 'district', 'city' ];
+    foreach ( $required as $field ) {
+        if ( empty( $new_addr[ $field ] ) ) {
+            wp_send_json_error( 'Vui lòng điền đầy đủ thông tin bắt buộc.' );
+        }
+    }
+
+    $addresses = (array) ( get_user_meta( $user_id, '_af_extra_addresses', true ) ?: [] );
+
+    if ( $idx >= 0 && isset( $addresses[ $idx ] ) ) {
+        // Cập nhật địa chỉ cũ
+        $addresses[ $idx ] = $new_addr;
+    } else {
+        // Thêm địa chỉ mới (tối đa 5)
+        if ( count( $addresses ) >= 5 ) {
+            wp_send_json_error( 'Bạn chỉ có thể thêm tối đa 5 địa chỉ.' );
+        }
+        $addresses[] = $new_addr;
+    }
+
+    // Re-index để tránh lỗi key
+    $addresses = array_values( $addresses );
+    update_user_meta( $user_id, '_af_extra_addresses', $addresses );
+
+    wp_send_json_success( [ 'addresses' => $addresses ] );
+}
+
+/**
+ * Xóa địa chỉ phụ theo index
+ */
+add_action( 'wp_ajax_af_delete_extra_address', 'animefigure_ajax_delete_extra_address' );
+function animefigure_ajax_delete_extra_address() {
+    check_ajax_referer( 'af_address_nonce', 'nonce' );
+
+    $user_id = get_current_user_id();
+    if ( ! $user_id ) {
+        wp_send_json_error( 'Bạn cần đăng nhập.' );
+    }
+
+    $idx       = isset( $_POST['idx'] ) ? intval( $_POST['idx'] ) : -1;
+    $addresses = (array) ( get_user_meta( $user_id, '_af_extra_addresses', true ) ?: [] );
+
+    if ( $idx < 0 || ! isset( $addresses[ $idx ] ) ) {
+        wp_send_json_error( 'Địa chỉ không tồn tại.' );
+    }
+
+    array_splice( $addresses, $idx, 1 );
+    $addresses = array_values( $addresses );
+    update_user_meta( $user_id, '_af_extra_addresses', $addresses );
+
+    wp_send_json_success( [ 'addresses' => $addresses ] );
+}
