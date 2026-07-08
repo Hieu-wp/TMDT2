@@ -16,6 +16,25 @@ defined( 'ABSPATH' ) || exit;
 /** @var WC_Order $order */
 $order   = wc_get_order( $order_id );
 $status  = $order ? $order->get_status() : '';
+
+// SVG Icons
+$icon_clipboard    = '<svg class="af-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>';
+$icon_map          = '<svg class="af-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>';
+$icon_phone        = '<svg class="af-icon af-icon-phone" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>';
+$icon_bag          = '<svg class="af-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>';
+$icon_clock        = '<svg class="af-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>';
+$icon_card         = '<svg class="af-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>';
+$icon_trash        = '<svg class="af-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>';
+$icon_alert_cancel = '<svg class="af-icon" style="color: #ef4444;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>';
+$icon_alert_fail   = '<svg class="af-icon" style="color: #f59e0b;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>';
+$icon_alert_refund = '<svg class="af-icon" style="color: #3b82f6;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>';
+
+$icon_box          = '<svg class="af-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>';
+$icon_check        = '<svg class="af-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>';
+$icon_truck        = '<svg class="af-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>';
+$icon_x            = '<svg class="af-icon" style="color: #ef4444;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>';
+$icon_party        = '<svg class="af-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 12 20 22 4 22 4 12"></polyline><rect x="2" y="7" width="20" height="5"></rect><line x1="12" y1="22" x2="12" y2="7"></line><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path></svg>';
+$icon_empty        = '<svg class="af-icon" style="width:32px; height:32px; color:#ccc;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>';
 ?>
 
 <?php if ( ! $order ) : ?>
@@ -80,7 +99,19 @@ $status  = $order ? $order->get_status() : '';
         ?>
             <div class="af-progress-step af-progress-step--<?php echo esc_attr( $cls ); ?>">
                 <div class="af-progress-step__bubble">
-                    <?php if ( $is_done ) : ?>✓<?php else : echo esc_html( $step['icon'] ); endif; ?>
+                    <?php if ( $is_done ) : ?>
+                        <svg class="af-icon af-icon-done" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    <?php else : 
+                        if ( $idx === 'created' ) : ?>
+                            <svg class="af-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                        <?php elseif ( $idx === 'confirmed' ) : ?>
+                            <svg class="af-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        <?php elseif ( $idx === 'shipping' ) : ?>
+                            <svg class="af-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                        <?php elseif ( $idx === 'completed' ) : ?>
+                            <svg class="af-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"></polyline><rect x="2" y="7" width="20" height="5"></rect><line x1="12" y1="22" x2="12" y2="7"></line><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path></svg>
+                        <?php endif;
+                    endif; ?>
                 </div>
                 <span class="af-progress-step__label"><?php echo esc_html( $step['label'] ); ?></span>
             </div>
@@ -92,11 +123,11 @@ $status  = $order ? $order->get_status() : '';
     <div class="af-view-order__alert af-view-order__alert--danger">
         <?php
         $alert_msgs = [
-            'cancelled' => '❌ Đơn hàng này đã bị hủy.',
-            'failed'    => '⚠️ Thanh toán thất bại. Vui lòng liên hệ shop để được hỗ trợ.',
-            'refunded'  => '↩️ Đơn hàng này đã được hoàn tiền.',
+            'cancelled' => $icon_x . ' Đơn hàng này đã bị hủy.',
+            'failed'    => $icon_alert_fail . ' Thanh toán thất bại. Vui lòng liên hệ shop để được hỗ trợ.',
+            'refunded'  => $icon_alert_refund . ' Đơn hàng này đã được hoàn tiền.',
         ];
-        echo esc_html( $alert_msgs[ $status ] ?? 'Đơn hàng có vấn đề.' );
+        echo wp_kses_post( $alert_msgs[ $status ] ?? 'Đơn hàng có vấn đề.' );
         ?>
     </div>
     <?php endif; ?>
@@ -105,7 +136,7 @@ $status  = $order ? $order->get_status() : '';
     <div class="af-view-order__grid">
 
         <div class="af-view-order__card">
-            <h4 class="af-view-order__card-title">📋 Chi tiết đơn hàng</h4>
+            <h4 class="af-view-order__card-title"><?php echo $icon_clipboard; ?> Chi tiết đơn hàng</h4>
             <table class="af-info-table">
                 <tr>
                     <td>Trạng thái hiện tại</td>
@@ -129,12 +160,12 @@ $status  = $order ? $order->get_status() : '';
         </div>
 
         <div class="af-view-order__card">
-            <h4 class="af-view-order__card-title">📍 Địa chỉ nhận hàng</h4>
+            <h4 class="af-view-order__card-title"><?php echo $icon_map; ?> Địa chỉ nhận hàng</h4>
             <address style="font-style:normal; font-size:14px; line-height:1.8; color:#555;">
                 <?php echo wp_kses_post( $order->get_formatted_shipping_address() ?: $order->get_formatted_billing_address() ); ?>
             </address>
             <?php if ( $order->get_billing_phone() ) : ?>
-                <p style="font-size:14px; margin:8px 0 0;">📞 <?php echo esc_html( $order->get_billing_phone() ); ?></p>
+                <p style="font-size:14px; margin:8px 0 0; display:flex; align-items:center; gap:6px;"><?php echo $icon_phone; ?> <?php echo esc_html( $order->get_billing_phone() ); ?></p>
             <?php endif; ?>
         </div>
 
@@ -142,7 +173,7 @@ $status  = $order ? $order->get_status() : '';
 
     <!-- Sản phẩm đã đặt -->
     <div class="af-view-order__card af-view-order__items">
-        <h4 class="af-view-order__card-title">🛍️ Sản phẩm đã đặt</h4>
+        <h4 class="af-view-order__card-title"><?php echo $icon_bag; ?> Sản phẩm đã đặt</h4>
         <table class="af-order-items">
             <thead>
                 <tr>
@@ -203,7 +234,7 @@ $status  = $order ? $order->get_status() : '';
 
     <!-- Timeline lịch sử đơn hàng -->
     <div class="af-view-order__card af-view-order__timeline">
-        <h4 class="af-view-order__card-title">🕐 Lịch sử theo dõi đơn hàng</h4>
+        <h4 class="af-view-order__card-title"><?php echo $icon_clock; ?> Lịch sử theo dõi đơn hàng</h4>
 
         <?php
         // Lấy tất cả order notes dành cho customer
@@ -232,27 +263,30 @@ $status  = $order ? $order->get_status() : '';
                     : date_i18n( 'd/m/Y H:i', strtotime( $note->comment_date ) );
 
                 // Xác định icon dựa trên nội dung note
-                $icon = '📋';
+                $icon = $icon_clipboard;
                 $content = $note->content;
                 if ( strpos( $content, '📦' ) !== false || strpos( $content, 'tạo' ) !== false ) {
-                    $icon = '📦';
+                    $icon = $icon_box;
                 } elseif ( strpos( $content, '✅' ) !== false || strpos( $content, 'xác nhận' ) !== false ) {
-                    $icon = '✅';
+                    $icon = $icon_check;
                 } elseif ( strpos( $content, '🚚' ) !== false || strpos( $content, 'giao' ) !== false ) {
-                    $icon = '🚚';
+                    $icon = $icon_truck;
                 } elseif ( strpos( $content, '💳' ) !== false || strpos( $content, 'thanh toán' ) !== false ) {
-                    $icon = '💳';
+                    $icon = $icon_card;
                 } elseif ( strpos( $content, '❌' ) !== false || strpos( $content, 'hủy' ) !== false ) {
-                    $icon = '❌';
+                    $icon = $icon_x;
                 } elseif ( strpos( $content, '🎉' ) !== false || strpos( $content, 'hoàn thành' ) !== false ) {
-                    $icon = '🎉';
+                    $icon = $icon_party;
                 }
+
+                // Lọc bỏ emoji trong nội dung note (do admin đã thêm emoji vào text trên backend)
+                $content_clean = preg_replace('/[\x{1F600}-\x{1F64F}\x{1F300}-\x{1F5FF}\x{1F680}-\x{1F6FF}\x{1F700}-\x{1F77F}\x{1F780}-\x{1F7FF}\x{1F800}-\x{1F8FF}\x{1F900}-\x{1F9FF}\x{1FA00}-\x{1FA6F}\x{1FA70}-\x{1FAFF}\x{2600}-\x{26FF}\x{2700}-\x{27BF}]/u', '', $content);
             ?>
             <div class="af-timeline-item">
                 <div class="af-timeline-item__dot"><?php echo $icon; ?></div>
                 <div class="af-timeline-item__body">
                     <div class="af-timeline-item__content">
-                        <?php echo wp_kses_post( $note->content ); ?>
+                        <?php echo wp_kses_post( $content_clean ); ?>
                     </div>
                     <div class="af-timeline-item__time">
                         <?php echo esc_html( $formatted_date ); ?>
@@ -264,7 +298,7 @@ $status  = $order ? $order->get_status() : '';
 
         <?php else : ?>
         <div class="af-timeline-empty">
-            <div class="af-timeline-empty__icon">📭</div>
+            <div class="af-timeline-empty__icon"><?php echo $icon_empty; ?></div>
             <p>Chưa có cập nhật nào cho đơn hàng này.</p>
         </div>
         <?php endif; ?>
@@ -280,7 +314,7 @@ $status  = $order ? $order->get_status() : '';
         <?php if ( $order->needs_payment() ) : ?>
         <a href="<?php echo esc_url( $order->get_checkout_payment_url() ); ?>"
            class="af-btn af-btn--primary">
-            💳 Thanh toán ngay
+            <?php echo $icon_card; ?> Thanh toán ngay
         </a>
         <?php endif; ?>
 
@@ -288,7 +322,7 @@ $status  = $order ? $order->get_status() : '';
         <a href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'cancel_order', 'true', $order->get_cancel_order_url() ), 'woocommerce-cancel_order' ) ); ?>"
            class="af-btn af-btn--danger"
            onclick="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?');">
-            ❌ Hủy đơn hàng
+            <?php echo $icon_x; ?> Hủy đơn hàng
         </a>
         <?php endif; ?>
     </div>
@@ -299,6 +333,17 @@ $status  = $order ? $order->get_status() : '';
 /* =====================================================
    VIEW ORDER PAGE STYLES
    ===================================================== */
+.af-icon {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    vertical-align: middle;
+}
+.af-view-order__card-title .af-icon { margin-right: 8px; width: 22px; height: 22px; color: #F28C8C; }
+.af-timeline-item__dot .af-icon { width: 16px; height: 16px; color: #F28C8C; }
+.af-btn .af-icon { width: 14px; height: 14px; margin-right: 4px; }
+.af-icon-phone { width: 14px; height: 14px; color: #888; }
+
 .af-view-order {
     font-family: 'Outfit', sans-serif;
     max-width: 840px;
@@ -331,7 +376,7 @@ $status  = $order ? $order->get_status() : '';
 }
 .af-progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #7c3aed, #f472b6);
+    background: linear-gradient(90deg, #F28C8C, #fca5a5);
     border-radius: 2px;
     transition: width 0.6s ease;
 }
@@ -360,15 +405,25 @@ $status  = $order ? $order->get_status() : '';
     font-weight: 800;
 }
 .af-progress-step--active .af-progress-step__bubble {
-    background: linear-gradient(135deg, #7c3aed, #f472b6);
+    background: linear-gradient(135deg, #F28C8C, #fca5a5);
     border-color: transparent;
     color: #fff;
-    box-shadow: 0 0 0 4px rgba(124,58,237,0.2);
+    box-shadow: 0 0 0 4px rgba(242,140,140,0.2);
     animation: pulse 2s infinite;
 }
+.af-progress-step__bubble .af-icon {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    vertical-align: middle;
+}
+.af-progress-step--done .af-icon-done {
+    width: 24px;
+    height: 24px;
+}
 @keyframes pulse {
-    0%, 100% { box-shadow: 0 0 0 4px rgba(124,58,237,0.2); }
-    50%       { box-shadow: 0 0 0 8px rgba(124,58,237,0.05); }
+    0%, 100% { box-shadow: 0 0 0 4px rgba(242,140,140,0.2); }
+    50%       { box-shadow: 0 0 0 8px rgba(242,140,140,0.05); }
 }
 .af-progress-step__label { font-size: 12px; font-weight: 600; color: #555; }
 .af-progress-step--pending .af-progress-step__label { color: #ccc; }
@@ -414,7 +469,7 @@ $status  = $order ? $order->get_status() : '';
 .af-info-table { width: 100%; border-collapse: collapse; font-size: 13px; }
 .af-info-table td { padding: 7px 4px; border-bottom: 1px solid #fafafa; }
 .af-info-table td:first-child { color: #888; width: 45%; }
-.af-total-price { font-size: 17px; color: #7c3aed; font-weight: 800; }
+.af-total-price { font-size: 17px; color: #F28C8C; font-weight: 800; }
 
 /* Status badge */
 .af-status-badge {
@@ -458,7 +513,7 @@ $status  = $order ? $order->get_status() : '';
 .af-order-items tfoot tr:last-child td {
     font-size: 15px;
     font-weight: 800;
-    color: #7c3aed;
+    color: #F28C8C;
     border-bottom: none;
 }
 .af-order-item__name { display: flex; align-items: center; gap: 10px; }
@@ -482,13 +537,13 @@ $status  = $order ? $order->get_status() : '';
     width: 38px;
     height: 38px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #ede9fe, #fce7f3);
+    background: linear-gradient(135deg, #fff0f2, #fce7f3);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 16px;
     flex-shrink: 0;
-    border: 2px solid #e9d5ff;
+    border: 2px solid #ffcdd2;
 }
 .af-timeline-item__body { flex: 1; }
 .af-timeline-item__content {
@@ -525,11 +580,11 @@ $status  = $order ? $order->get_status() : '';
 }
 .af-btn:hover { background: #f5f5f5; text-decoration: none; color: #333; }
 .af-btn--primary {
-    background: linear-gradient(135deg, #7c3aed, #a855f7);
+    background: linear-gradient(135deg, #F28C8C, #fca5a5);
     border-color: transparent;
     color: #fff;
 }
-.af-btn--primary:hover { background: linear-gradient(135deg, #6d28d9, #9333ea); color: #fff; transform: translateY(-1px); }
+.af-btn--primary:hover { background: linear-gradient(135deg, #e57373, #ef9a9a); color: #fff; transform: translateY(-1px); }
 .af-btn--danger { border-color: #ffcdd2; color: #c62828; }
 .af-btn--danger:hover { background: #ffebee; color: #b71c1c; }
 </style>
