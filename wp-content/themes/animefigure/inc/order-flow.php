@@ -20,6 +20,50 @@ add_filter( 'woocommerce_order_button_text', function() {
 } );
 
 /**
+ * Đổi khối billing mặc định thành ngữ cảnh giao hàng.
+ * WooCommerce vẫn lưu dữ liệu vào billing fields để không phá luồng tạo đơn.
+ */
+add_filter( 'woocommerce_checkout_billing_heading', function() {
+    return 'Thông tin nhận hàng';
+} );
+
+add_filter( 'woocommerce_checkout_fields', 'animefigure_customize_checkout_shipping_labels' );
+function animefigure_customize_checkout_shipping_labels( $fields ) {
+    $labels = [
+        'billing_first_name' => 'Tên người nhận',
+        'billing_last_name'  => 'Họ người nhận',
+        'billing_country'    => 'Quốc gia/Khu vực giao hàng',
+        'billing_address_1'  => 'Địa chỉ giao hàng',
+        'billing_address_2'  => 'Địa chỉ bổ sung (tùy chọn)',
+        'billing_city'       => 'Tỉnh / Thành phố',
+        'billing_state'      => 'Quận / Huyện',
+        'billing_postcode'   => 'Mã bưu điện (tùy chọn)',
+        'billing_phone'      => 'Số điện thoại liên hệ',
+        'billing_email'      => 'Email nhận xác nhận đơn hàng',
+    ];
+
+    foreach ( $labels as $field_key => $label ) {
+        if ( isset( $fields['billing'][ $field_key ] ) ) {
+            $fields['billing'][ $field_key ]['label'] = $label;
+        }
+    }
+
+    if ( isset( $fields['billing']['billing_address_1'] ) ) {
+        $fields['billing']['billing_address_1']['placeholder'] = 'Số nhà, tên đường, phường/xã';
+    }
+
+    if ( isset( $fields['billing']['billing_address_2'] ) ) {
+        $fields['billing']['billing_address_2']['placeholder'] = 'Tòa nhà, căn hộ, ghi chú thêm';
+    }
+
+    if ( isset( $fields['billing']['billing_phone'] ) ) {
+        $fields['billing']['billing_phone']['required'] = true;
+    }
+
+    return $fields;
+}
+
+/**
  * Ghi Order Note ngay khi đơn hàng mới được tạo thành công.
  * Hook này chạy SAU khi order đã được insert vào DB,
  * cho phép ghi log thời điểm khách đặt hàng chính xác.
@@ -30,7 +74,7 @@ add_action( 'woocommerce_checkout_order_created', 'animefigure_on_order_created'
 function animefigure_on_order_created( $order ) {
     $payment_method_title = $order->get_payment_method_title();
     $note = sprintf(
-        '📦 Đơn hàng được tạo lúc %s. Phương thức thanh toán: <strong>%s</strong>.',
+        'Đơn hàng được tạo lúc %s. Phương thức thanh toán: <strong>%s</strong>.',
         wp_date( 'd/m/Y H:i:s' ),
         esc_html( $payment_method_title )
     );
@@ -54,7 +98,7 @@ function animefigure_on_payment_complete( $order_id ) {
 
     // 1. Ghi note xác nhận thanh toán — hiển thị cho customer
     $note = sprintf(
-        '💳 Thanh toán xác nhận thành công lúc %s. Mã giao dịch: <strong>%s</strong>.',
+        'Thanh toán xác nhận thành công lúc %s. Mã giao dịch: <strong>%s</strong>.',
         wp_date( 'd/m/Y H:i:s' ),
         esc_html( $order->get_transaction_id() ?: 'N/A' )
     );

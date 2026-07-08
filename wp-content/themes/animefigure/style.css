@@ -3208,6 +3208,33 @@ body.admin-bar .navbar {
     display: none !important;
 }
 
+/* Checkout back button */
+.af-checkout-nav {
+  max-width: 800px;
+  margin: 0 auto 16px;
+  display: flex;
+  justify-content: flex-start;
+}
+.af-checkout-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  background: #fff;
+  color: var(--color-text);
+  font-weight: 700;
+  text-decoration: none;
+  transition: all var(--transition-base);
+}
+.af-checkout-back:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(242,140,140,0.12);
+}
+
 /* Stack checkout columns vertically and center */
 .woocommerce-checkout #customer_details.col2-set {
     display: flex;
