@@ -147,7 +147,14 @@ get_header();
 
               // Final fallback if no product has an image either
               if ( ! $image_url ) {
-                  $image_url = 'https://placehold.co/200x200/transparent/333?text=' . urlencode($cat->name);
+                  $cat_name_lower = mb_strtolower($cat->name, 'UTF-8');
+                  if ( strpos($cat_name_lower, 'mô hình') !== false || strpos($cat_name_lower, 'figure') !== false ) {
+                      $image_url = 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=200&h=200&fit=crop&q=80';
+                  } elseif ( strpos($cat_name_lower, 'phụ kiện') !== false ) {
+                      $image_url = 'https://images.unsplash.com/photo-1572916118970-fb5c8a1cb3d1?w=200&h=200&fit=crop&q=80';
+                  } else {
+                      $image_url = 'https://placehold.co/200x200/transparent/333?text=' . urlencode($cat->name);
+                  }
               }
               
               $cat_link = get_term_link( $cat );
