@@ -616,3 +616,36 @@ function animefigure_ensure_static_pages() {
     }
 }
 add_action( 'init', 'animefigure_ensure_static_pages', 30 );
+
+/* =========================================================
+   CUSTOM CHECKOUT FLOW LOGIC
+   ========================================================= */
+
+// Dynamically change checkout page title on order-received and order-pay pages to "Thanh toán đơn hàng"
+add_filter( 'the_title', 'animefigure_custom_checkout_endpoint_titles', 10, 2 );
+function animefigure_custom_checkout_endpoint_titles( $title, $id ) {
+    if ( is_admin() ) {
+        return $title;
+    }
+    if ( function_exists( 'is_checkout' ) && is_checkout() && $id === (int) get_option( 'woocommerce_checkout_page_id' ) ) {
+        if ( is_wc_endpoint_url( 'order-received' ) ) {
+            return 'Thanh toán đơn hàng';
+        }
+        if ( is_wc_endpoint_url( 'order-pay' ) ) {
+            return 'Thanh toán đơn hàng';
+        }
+    }
+    return $title;
+}
+
+// Translate "Proceed to checkout" button text to "Tiến hành đặt hàng"
+add_filter( 'gettext', 'animefigure_custom_cart_checkout_button_text', 20, 3 );
+function animefigure_custom_cart_checkout_button_text( $translated_text, $text, $domain ) {
+    if ( 'woocommerce' === $domain ) {
+        if ( strcasecmp( $text, 'Proceed to checkout' ) === 0 ) {
+            return 'Tiến hành đặt hàng';
+        }
+    }
+    return $translated_text;
+}
+

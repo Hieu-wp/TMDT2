@@ -106,7 +106,7 @@
                 <span style="color:#2F80ED;"><?php echo WC()->cart->get_cart_total(); ?></span>
               </div>
               <a href="<?php echo wc_get_cart_url(); ?>" class="btn btn-primary btn-sm" style="text-align:center;">Xem giỏ hàng</a>
-              <a href="<?php echo wc_get_checkout_url(); ?>" class="btn btn-accent btn-sm" style="text-align:center;">Thanh toán</a>
+              <a href="<?php echo wc_get_checkout_url(); ?>" class="btn btn-accent btn-sm" style="text-align:center;">Đặt hàng</a>
             </div>
             <?php endif; ?>
           </div>
