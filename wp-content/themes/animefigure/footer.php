@@ -63,15 +63,18 @@
         <div class="footer-links">
           <?php
           $cats = [
-              'nendoroid'      => 'Nendoroid',
-              'scale-figure'   => 'Scale Figure',
-              'figma'          => 'Figma',
-              'pop-up-parade'  => 'Pop Up Parade',
-              'statue-premium' => 'Statue & Premium'
+              'nedoroid'      => 'Nendoroid',
+              'scale-figure'  => 'Scale Figure',
+              'figma'         => 'Figma',
+              'pop-up-parade' => 'Pop Up Parade',
           ];
           foreach ($cats as $slug => $label) {
               $term = get_term_by('slug', $slug, 'product_cat');
-              $link = $term ? get_term_link($term) : home_url("/index.php/danh-muc-san-pham/{$slug}/");
+              if ($term && ! is_wp_error($term)) {
+                  $link = get_term_link($term);
+              } else {
+                  $link = home_url("/index.php/danh-muc-san-pham/mo-hinh/{$slug}/");
+              }
               echo '<a href="' . esc_url($link) . '">' . esc_html($label) . '</a>';
           }
           ?>
@@ -84,15 +87,17 @@
         <div class="footer-links">
           <?php
           $accs = [
-              'hop-trung-bay'     => 'Hộp trưng bày',
-              'de-dung-mo-hinh'   => 'Đế đứng mô hình',
-              'den-led-trang-tri' => 'Đèn LED trang trí',
-              'dung-cu-ve-sinh'   => 'Dụng cụ vệ sinh',
-              'backdrop-canh-nen' => 'Backdrop cảnh nền'
+              'card'          => 'Card',
+              'hop-trung-bay' => 'Hộp trưng bày',
+              'ke-mo-hinh'    => 'Kệ mô hình',
           ];
           foreach ($accs as $slug => $label) {
               $term = get_term_by('slug', $slug, 'product_cat');
-              $link = $term ? get_term_link($term) : home_url("/index.php/danh-muc-san-pham/{$slug}/");
+              if ($term && ! is_wp_error($term)) {
+                  $link = get_term_link($term);
+              } else {
+                  $link = home_url("/index.php/danh-muc-san-pham/{$slug}/");
+              }
               echo '<a href="' . esc_url($link) . '">' . esc_html($label) . '</a>';
           }
           ?>
